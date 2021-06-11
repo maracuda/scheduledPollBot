@@ -5,7 +5,7 @@ using Vostok.Hosting.Setup;
 
 namespace TelegramInteraction
 {
-    public static class EntryPoint
+    public static class Program
     {
         public static async Task Main()
         {

@@ -9,7 +9,7 @@ namespace TelegramInteraction
     {
         public static async Task Main()
         {
-            var application = new ScheduledApplication();
+            var application = new MultiApplication();
 
             void EnvironmentSetup(IVostokHostingEnvironmentBuilder builder)
             {
@@ -20,8 +20,8 @@ namespace TelegramInteraction
                                                                  .SetEnvironment("Local")
                                                                  .SetInstance("first")
                                                                  )
-                    .SetupLog(logBuilder => logBuilder.SetupFileLog()
-                    );
+                    .SetupLog(logBuilder => logBuilder.SetupConsoleLog())
+                    .SetPort(9949);
             }
 
             var hostSettings = new VostokHostSettings(application, EnvironmentSetup);

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 
 using Vostok.Applications.AspNetCore;
 using Vostok.Applications.AspNetCore.Builders;
@@ -30,7 +31,10 @@ namespace TelegramInteraction
                         b.Configure(app =>
                                 {
                                     app.UseRouting();
-                                    app.UseVostokPingApi();
+                                    app.Run(async context =>
+                                        {
+                                            await context.Response.WriteAsync("I'm alive!");
+                                        });
                                 }
                         );
                     }

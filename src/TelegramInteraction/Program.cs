@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 
 using Vostok.Hosting;
 using Vostok.Hosting.Setup;
@@ -11,6 +12,12 @@ namespace TelegramInteraction
         {
             var application = new MultiApplication();
 
+            var port = 9949;
+            if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("PORT")))
+            {
+                port = int.Parse(Environment.GetEnvironmentVariable("PORT"));
+            }
+
             void EnvironmentSetup(IVostokHostingEnvironmentBuilder builder)
             {
                 builder
@@ -21,7 +28,11 @@ namespace TelegramInteraction
                                                                  .SetInstance("first")
                                                                  )
                     .SetupLog(logBuilder => logBuilder.SetupConsoleLog())
-                    .SetPort(9949);
+                    .SetPort(port)
+                    .DisableClusterConfig()
+                    .DisableHercules()
+                    .DisableZooKeeper()
+                    .DisableServiceBeacon();
             }
 
             var hostSettings = new VostokHostSettings(application, EnvironmentSetup);

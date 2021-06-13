@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 using BusinessLogic;
 
@@ -17,9 +16,8 @@ namespace TelegramInteraction
             var container = environment.HostExtensions.Get<Container>();
             var sendPollWork = container.GetInstance<SendPollWork>();
 
-            // return Scheduler.Crontab("0 10 * * 1,4");
             builder.Schedule(sendPollWork.GetType().Name,
-                             Scheduler.Periodical(TimeSpan.FromSeconds(50)),
+                             Scheduler.Crontab("0 10 * * 1,4"),
                              context => sendPollWork.ExecuteAsync(context.CancellationToken)
             );
 

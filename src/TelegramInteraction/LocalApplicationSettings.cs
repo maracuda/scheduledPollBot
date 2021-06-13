@@ -20,7 +20,7 @@ namespace TelegramInteraction
                 throw new Exception($"Variable {name} not found in json file");
             }
 
-            return firstOrDefault.Split('=', StringSplitOptions.RemoveEmptyEntries).Last();
+            return firstOrDefault.Split('=', StringSplitOptions.RemoveEmptyEntries).Last().Trim();
         }
     }
 }

@@ -10,7 +10,8 @@ namespace TelegramInteraction
     {
         public static void ConfigureTelegramClient(this Container container, IApplicationSettings settings)
         {
-            var telegramBotClient = new TelegramBotClient(settings.GetString("BotToken"));
+            var token = settings.GetString("BotToken");
+            var telegramBotClient = new TelegramBotClient(token);
 
             container.RegisterInstance<ITelegramBotClient>(telegramBotClient);
         }

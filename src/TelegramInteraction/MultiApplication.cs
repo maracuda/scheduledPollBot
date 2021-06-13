@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Http;
 
 using SimpleInjector;
 
+using TelegramInteraction.Chat;
+
 using Vostok.Applications.AspNetCore;
 using Vostok.Applications.AspNetCore.Builders;
 using Vostok.Hosting.Abstractions;
@@ -23,6 +25,7 @@ namespace TelegramInteraction
             : base(builder => builder
                               .AddAspNetCore(SetupAspNetCore)
                               .AddApplication(new ScheduledApplication())
+                              .AddApplication(new ChatApplication())
                               .UseParallelInitialization()
             )
         {
@@ -37,7 +40,11 @@ namespace TelegramInteraction
             container.RegisterInstance(applicationSettings);
             container.ConfigureTelegramClient(applicationSettings);
             container.Register<SendPollWork>();
+            
+            container.Register<ChatWorker>();
  
+            container.RegisterInstance(environment.Log);
+            
             environment.HostExtensions.AsMutable().Add(container);
  
             return Task.CompletedTask;

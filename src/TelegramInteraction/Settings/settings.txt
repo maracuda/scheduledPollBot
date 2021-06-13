@@ -1,1 +1,2 @@
-﻿BotToken = <cendored>
+﻿BotToken = <cens>
+ChatId = <cens>

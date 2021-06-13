@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Net.Http;
+using System.Threading.Tasks;
 
 using BusinessLogic;
 
@@ -12,9 +14,11 @@ using TelegramInteraction.Chat;
 
 using Vostok.Applications.AspNetCore;
 using Vostok.Applications.AspNetCore.Builders;
+using Vostok.Applications.Scheduled;
 using Vostok.Hosting.Abstractions;
 using Vostok.Hosting.Abstractions.Composite;
 using Vostok.Hosting.Abstractions.Requirements;
+using Vostok.Logging.Abstractions;
 
 namespace TelegramInteraction
 {
@@ -26,12 +30,28 @@ namespace TelegramInteraction
                               .AddAspNetCore(SetupAspNetCore)
                               .AddApplication(new ScheduledApplication())
                               .AddApplication(new ChatApplication())
+                              .AddScheduled(SetupPinger)
                               .UseParallelInitialization()
             )
         {
         }
 
-        
+        private static void SetupPinger(IScheduledActionsBuilder obj, IVostokHostingEnvironment environment)
+        {
+            obj.Schedule("Ping self",
+                         Scheduler.Periodical(TimeSpan.FromMinutes(10)),
+                         async () =>
+                             {
+                                 var httpClient = new HttpClient();
+
+                                 var response =
+                                     await httpClient.GetAsync("https://kontur-sport-bot.herokuapp.com/_status/ping");
+
+                                 environment.Log.Info($"Ping result: {response.StatusCode}");
+                             }
+            );
+        }
+
         public override Task PreInitializeAsync(IVostokHostingEnvironment environment)
         {
             var container = new Container();
@@ -40,17 +60,16 @@ namespace TelegramInteraction
             container.RegisterInstance(applicationSettings);
             container.ConfigureTelegramClient(applicationSettings);
             container.Register<SendPollWork>();
-            
+
             container.Register<ChatWorker>();
- 
+
             container.RegisterInstance(environment.Log);
-            
+
             environment.HostExtensions.AsMutable().Add(container);
- 
+
             return Task.CompletedTask;
         }
 
-        
         private static void SetupAspNetCore(IVostokAspNetCoreApplicationBuilder builder,
                                             IVostokHostingEnvironment environment
         )
@@ -60,18 +79,11 @@ namespace TelegramInteraction
                         b.Configure(app =>
                                 {
                                     app.UseRouting();
-                                    app.Run(async context =>
-                                        {
-                                            await context.Response.WriteAsync("I'm alive!");
-                                        });
+                                    app.Run(async context => { await context.Response.WriteAsync("I'm alive!"); });
                                 }
                         );
                     }
             );
         }
-    }
-
-    public class Settings
-    {
     }
 }

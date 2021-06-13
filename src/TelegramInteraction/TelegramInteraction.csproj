@@ -11,4 +11,18 @@
       <PackageReference Include="Vostok.Hosting" Version="0.3.17" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\BusinessLogic\BusinessLogic.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Update="Settings\settings.txt">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Scheduled" />
+    </ItemGroup>
+
 </Project>

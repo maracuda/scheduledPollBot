@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Threading.Tasks;
 
+using BusinessLogic;
+
+using SimpleInjector;
+
 using Vostok.Applications.Scheduled;
 using Vostok.Hosting.Abstractions;
-using Vostok.Logging.Abstractions;
 
 namespace TelegramInteraction
 {
@@ -11,17 +14,16 @@ namespace TelegramInteraction
     {
         protected override Task SetupAsync(IScheduledActionsBuilder builder, IVostokHostingEnvironment environment)
         {
-            // Здесь следует регистрировать задачи через переданный builder.
-            // Для регистрации нужно передать имя, планировщик и делегат с полезной нагрузкой.
-            // Тут же можно провести и необходимый "прогрев" приложения.
- 
-            builder.Schedule("action1", Scheduler.Periodical(TimeSpan.FromSeconds(10)),
-                             () =>
-                                 {
-                                     environment.Log.Info("I'm running!");
-                                 });
-         
+            var container = environment.HostExtensions.Get<Container>();
+            var sendPollWork = container.GetInstance<SendPollWork>();
+
+            // return Scheduler.Crontab("0 10 * * 1,4");
+            builder.Schedule(sendPollWork.GetType().Name,
+                             Scheduler.Periodical(TimeSpan.FromSeconds(50)),
+                             context => sendPollWork.ExecuteAsync(context.CancellationToken)
+            );
+
             return Task.CompletedTask;
         }
- }
+    }
 }

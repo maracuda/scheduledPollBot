@@ -17,7 +17,8 @@ namespace TelegramInteraction
             var sendPollWork = container.GetInstance<SendPollWork>();
 
             builder.Schedule(sendPollWork.GetType().Name,
-                             Scheduler.Crontab("0 10 * * 1,4"),
+                             Scheduler.Crontab(
+                                 container.GetInstance<IApplicationSettings>().GetString("Schedule")),
                              context => sendPollWork.ExecuteAsync(context.CancellationToken)
             );
 

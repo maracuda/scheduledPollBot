@@ -13,6 +13,11 @@ namespace BusinessLogic
                                 NotificationSchedule = "0 5 * * 1,4",
                                 TelegramChatId = "-1001318882712",
                             },
+                        new SportGroup
+                            {
+                                NotificationSchedule = "0 5 * * 1,3",
+                                TelegramChatId = "-1001286172835",
+                            },
                     }
             );
         }

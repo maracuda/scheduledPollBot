@@ -22,7 +22,7 @@ namespace TelegramInteraction
 
             foreach(var sportGroup in groups)
             {
-                builder.Schedule(sendPollWork.GetType().Name, Scheduler.Crontab(sportGroup.NotificationSchedule),
+                builder.Schedule(sportGroup.Name, Scheduler.Crontab(sportGroup.NotificationSchedule),
                                  context 
                                      => sendPollWork.ExecuteAsync(context.CancellationToken, sportGroup.TelegramChatId)
                 );

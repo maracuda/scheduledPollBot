@@ -11,5 +11,10 @@
         /// Id чата в телеграмме
         /// </summary>
         public string TelegramChatId { get; set; }
+
+        /// <summary>
+        /// Имя группы
+        /// </summary>
+        public string Name { get; set; }
     }
 }

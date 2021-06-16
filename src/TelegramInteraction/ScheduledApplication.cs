@@ -11,18 +11,22 @@ namespace TelegramInteraction
 {
     public class ScheduledApplication : VostokScheduledAsyncApplication
     {
-        protected override Task SetupAsync(IScheduledActionsBuilder builder, IVostokHostingEnvironment environment)
+        protected override async Task SetupAsync(IScheduledActionsBuilder builder, IVostokHostingEnvironment environment
+        )
         {
             var container = environment.HostExtensions.Get<Container>();
             var sendPollWork = container.GetInstance<SendPollWork>();
 
-            builder.Schedule(sendPollWork.GetType().Name,
-                             Scheduler.Crontab(
-                                 container.GetInstance<IApplicationSettings>().GetString("Schedule")),
-                             context => sendPollWork.ExecuteAsync(context.CancellationToken)
-            );
+            var sportGroupRepository = container.GetInstance<ISportGroupRepository>();
+            var groups = await sportGroupRepository.ReadAllAsync();
 
-            return Task.CompletedTask;
+            foreach(var sportGroup in groups)
+            {
+                builder.Schedule(sendPollWork.GetType().Name, Scheduler.Crontab(sportGroup.NotificationSchedule),
+                                 context 
+                                     => sendPollWork.ExecuteAsync(context.CancellationToken, sportGroup.TelegramChatId)
+                );
+            }
         }
     }
 }

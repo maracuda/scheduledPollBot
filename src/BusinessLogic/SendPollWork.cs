@@ -9,20 +9,17 @@ namespace BusinessLogic
     public class SendPollWork
     {
         private readonly ITelegramBotClient telegramBotClient;
-        private readonly IApplicationSettings applicationSettings;
 
         public SendPollWork(
-            ITelegramBotClient telegramBotClient,
-            IApplicationSettings applicationSettings
+            ITelegramBotClient telegramBotClient
             )
         {
             this.telegramBotClient = telegramBotClient;
-            this.applicationSettings = applicationSettings;
         }
 
-        public async Task ExecuteAsync(CancellationToken token)
+        public async Task ExecuteAsync(CancellationToken token, string chatId)
         {
-            await telegramBotClient.SendPollAsync(applicationSettings.GetString("ChatId"),
+            await telegramBotClient.SendPollAsync(chatId,
                                                   $"Йога {DateTime.Now.AddDays(1).ToShortDateString()}",
                                                   new[] {"Пойду в зал", "Пойду онлайн", "Не пойду", "Возможно",},
                                                   isAnonymous: false,

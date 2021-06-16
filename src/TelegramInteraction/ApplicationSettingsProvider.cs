@@ -1,14 +1,12 @@
-﻿using System;
-
-using BusinessLogic;
+﻿using BusinessLogic;
 
 namespace TelegramInteraction
 {
     public static class ApplicationSettingsProvider
     {
-        public static IApplicationSettings Get()
+        public static IApplicationSettings Get(string applicationIdentityEnvironment)
         {
-            if(Environment.CurrentDirectory.Contains("heroku"))
+            if(applicationIdentityEnvironment == EnvironmentType.Production)
             {
                 return new HerokuApplicationSettings();
             }

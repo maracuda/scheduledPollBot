@@ -24,7 +24,7 @@ namespace TelegramInteraction
                     .SetupApplicationIdentity(identityBuilder => identityBuilder
                                                                  .SetProject("MyProject")
                                                                  .SetApplication("MyApplication")
-                                                                 .SetEnvironment("Local")
+                                                                 .SetEnvironment(GetEnvironment())
                                                                  .SetInstance("first")
                                                                  )
                     .SetupLog(logBuilder => logBuilder.SetupConsoleLog())
@@ -40,6 +40,11 @@ namespace TelegramInteraction
             var host = new VostokHost(hostSettings);
 
             await host.WithConsoleCancellation().RunAsync();
+        }
+
+        private static string GetEnvironment()
+        {
+            return Environment.CurrentDirectory.Contains("heroku") ? EnvironmentType.Production : EnvironmentType.Develop;
         }
     }
 }

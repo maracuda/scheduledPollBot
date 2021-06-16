@@ -56,7 +56,7 @@ namespace TelegramInteraction
         {
             var container = new Container();
 
-            var applicationSettings = ApplicationSettingsProvider.Get();
+            var applicationSettings = ApplicationSettingsProvider.Get(environment.ApplicationIdentity.Environment);
             container.RegisterInstance(applicationSettings);
             container.ConfigureTelegramClient(applicationSettings);
             container.Register<SendPollWork>();
@@ -64,6 +64,15 @@ namespace TelegramInteraction
             container.Register<ChatWorker>();
 
             container.RegisterInstance(environment.Log);
+
+            if(environment.ApplicationIdentity.Environment == EnvironmentType.Production)
+            {
+                container.Register<ISportGroupRepository, HardCodedSportGroupRepository>();
+            }
+            else
+            {
+                container.Register<ISportGroupRepository, DevelopSportGroupRepository>();
+            }
 
             environment.HostExtensions.AsMutable().Add(container);
 

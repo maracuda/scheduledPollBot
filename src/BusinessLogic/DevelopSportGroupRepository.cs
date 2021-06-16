@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace BusinessLogic
 {
-    public class TestSportGroupRepository : ISportGroupRepository
+    public class DevelopSportGroupRepository : ISportGroupRepository
     {
         public Task<SportGroup[]> ReadAllAsync()
         {

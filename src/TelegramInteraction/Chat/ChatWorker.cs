@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -13,14 +12,14 @@ namespace TelegramInteraction.Chat
 {
     public class ChatWorker
     {
-        private readonly ILog log;
-
         public ChatWorker(ILog log,
-                          ITelegramBotClient telegramBotClient
+                          ITelegramBotClient telegramBotClient,
+                          ICommandsRouter commandsRouter
         )
         {
             this.log = log;
             bot = telegramBotClient;
+            this.commandsRouter = commandsRouter;
         }
 
         public async Task DoWorkAsync(CancellationToken cancellationToken)
@@ -30,7 +29,7 @@ namespace TelegramInteraction.Chat
 
             bot.OnReceiveError += (_, args) => log.Error(args.ApiRequestException);
             bot.OnMessage += BotOnMessageReceived;
-            
+
             bot.StartReceiving(null, cancellationToken);
             log.Info($"Start listening for @{me.Username}");
         }
@@ -43,17 +42,12 @@ namespace TelegramInteraction.Chat
                 return;
             }
 
-            switch(message.Text.Split(' ').First())
-            {
-            case "/ping":
-                await bot.SendTextMessageAsync(
-                    chatId: message.Chat.Id,
-                    text: "pong"
-                );
-                break;
-            }
+            await commandsRouter.RouteAsync(message);
         }
 
+        private readonly ILog log;
+
         private readonly ITelegramBotClient bot;
+        private readonly ICommandsRouter commandsRouter;
     }
 }

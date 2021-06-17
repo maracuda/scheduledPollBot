@@ -73,7 +73,11 @@ namespace TelegramInteraction
             {
                 container.Register<ISportGroupRepository, DevelopSportGroupRepository>();
             }
+            
+            container.Register<ICommandsRouter, CommandsRouter>();
 
+            container.Collection.Register<IChatCommand>(typeof(PingCommand).Assembly);
+            
             environment.HostExtensions.AsMutable().Add(container);
 
             return Task.CompletedTask;

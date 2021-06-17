@@ -8,24 +8,33 @@ namespace TelegramInteraction.Chat
 {
     public class CommandsRouter : ICommandsRouter
     {
-        public CommandsRouter(ITelegramBotClient telegramBotClient)
+        public CommandsRouter(ITelegramBotClient telegramBotClient,
+                              IChatCommand[] commands
+        )
         {
             this.telegramBotClient = telegramBotClient;
+            this.commands = commands;
         }
 
         public async Task RouteAsync(Message message)
         {
-            switch(message.Text.Split(' ').First())
+            var commandText = message.Text.Split(' ').First();
+            var chatCommand = commands.SingleOrDefault(c => c.SupportedTemplates.Contains(commandText));
+
+            if(chatCommand == null)
             {
-            case "/ping":
                 await telegramBotClient.SendTextMessageAsync(
                     chatId: message.Chat.Id,
-                    text: $"pong, chatId: {message.Chat.Id}"
+                    text: $"Не знаю что ответить, попробуй что-то из знакомого:\r\n"
+                          + $"{string.Join("\r\n", commands.SelectMany(c => c.SupportedTemplates))}"
                 );
-                break;
+                return;
             }
+
+            await chatCommand.ExecuteAsync(message);
         }
 
         private readonly ITelegramBotClient telegramBotClient;
+        private readonly IChatCommand[] commands;
     }
 }

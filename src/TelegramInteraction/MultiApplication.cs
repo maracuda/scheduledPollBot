@@ -73,6 +73,8 @@ namespace TelegramInteraction
             {
                 container.Register<ISportGroupRepository, DevelopSportGroupRepository>();
             }
+            
+            container.Register<ICommandsRouter, CommandsRouter>();
 
             environment.HostExtensions.AsMutable().Add(container);
 

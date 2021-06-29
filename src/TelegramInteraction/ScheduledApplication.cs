@@ -23,7 +23,7 @@ namespace TelegramInteraction
 
             foreach(var sportGroup in groups)
             {
-                builder.Schedule(sportGroup.Name, new CrontabWithOffsetScheduler(sportGroup.TrainingSchedule, -TimeSpan.FromDays(1)),
+                builder.Schedule(sportGroup.Name, Scheduler.Crontab(sportGroup.NotificationSchedule),
                                  context 
                                      =>
                                      {

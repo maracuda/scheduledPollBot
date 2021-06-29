@@ -12,6 +12,7 @@ namespace BusinessLogic
                             {
                                 Name = "A.Petrazhickiy",
                                 TrainingSchedule = "0 5 * * 2,5",
+                                NotificationSchedule = "0 5 * * 1,4",
                                 TelegramChatId = "-1001318882712",
                                 Title = "Йога",
                             },
@@ -19,6 +20,7 @@ namespace BusinessLogic
                             {
                                 Name = "E.Petrazhickaya",
                                 TrainingSchedule = "0 5 * * 2,4",
+                                NotificationSchedule = "0 5 * * 1,3",
                                 TelegramChatId = "-1001286172835",
                                 Title = "Йога",
                             },

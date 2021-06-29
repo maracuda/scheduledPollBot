@@ -5,6 +5,8 @@ using BusinessLogic;
 
 using SimpleInjector;
 
+using Telegram.Bot;
+
 using Vostok.Applications.Scheduled;
 using Vostok.Hosting.Abstractions;
 
@@ -16,35 +18,36 @@ namespace TelegramInteraction
         )
         {
             var container = environment.HostExtensions.Get<Container>();
-            var sendPollWork = container.GetInstance<SendPollWork>();
-
+            
+            var telegramBotClient = container.GetInstance<ITelegramBotClient>();
             var sportGroupRepository = container.GetInstance<ISportGroupRepository>();
+            
             var groups = await sportGroupRepository.ReadAllAsync();
-
             foreach(var sportGroup in groups)
             {
-                builder.Schedule(sportGroup.Name, Scheduler.Crontab(sportGroup.NotificationSchedule),
-                                 context 
-                                     =>
-                                     {
-                                         // NOTE: не хотелось тащить Scheduler.Crontab внутрь sendPollWork.ExecuteAsync
-                                         // Но может это и правильно
-                                         var trainingTime = Scheduler.Crontab(sportGroup.TrainingSchedule).ScheduleNext(DateTimeOffset.Now);
-                                         if(!trainingTime.HasValue)
-                                         {
-                                             throw new Exception("Can't define training time");
-                                         }
-                                         
-                                         return sendPollWork.ExecuteAsync(
-                                             context.CancellationToken,
-                                             sportGroup.TelegramChatId,
-                                             trainingTime.Value,
-                                             sportGroup.Title,
-                                             sportGroup.PollOptions
-                                         );
-                                     }
+                builder.Schedule(sportGroup.Name,
+                                 Scheduler.Crontab(sportGroup.NotificationSchedule),
+                                 context => SendPollAsync(sportGroup, telegramBotClient, context)
                 );
             }
+        }
+
+        private static Task SendPollAsync(SportGroup sportGroup, ITelegramBotClient telegramBotClient,
+                                          IScheduledActionContext context
+        )
+        {
+            var trainingTime = Scheduler.Crontab(sportGroup.TrainingSchedule).ScheduleNext(DateTimeOffset.Now);
+            if(!trainingTime.HasValue)
+            {
+                throw new Exception("Can't define training time");
+            }
+
+            return telegramBotClient.SendPollAsync(sportGroup.TelegramChatId,
+                                                   $"{sportGroup.Title} {trainingTime.Value.Date.ToShortDateString()}",
+                                                   sportGroup.PollOptions,
+                                                   isAnonymous: false,
+                                                   cancellationToken: context.CancellationToken
+            );
         }
     }
 }

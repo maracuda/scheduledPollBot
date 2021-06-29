@@ -11,14 +11,29 @@ namespace BusinessLogic
                         new SportGroup
                             {
                                 Name = "A.Petrazhickiy",
+                                TrainingSchedule = "0 5 * * 2,5",
                                 NotificationSchedule = "0 5 * * 1,4",
                                 TelegramChatId = "-1001318882712",
+                                Title = "Йога",
+                                PollOptions = new[] {"Пойду в зал", "Пойду онлайн", "Не пойду", "Возможно",},
                             },
                         new SportGroup
                             {
                                 Name = "E.Petrazhickaya",
+                                TrainingSchedule = "0 5 * * 2,4",
                                 NotificationSchedule = "0 5 * * 1,3",
                                 TelegramChatId = "-1001286172835",
+                                Title = "Йога",
+                                PollOptions = new[] {"Пойду в зал", "Пойду онлайн", "Не пойду", "Возможно",},
+                            },
+                        new SportGroup
+                            {
+                                Name = "Anna Vetlugina",
+                                Title = "Фитнес",
+                                TrainingSchedule = "0 5 * * 1,3,5",
+                                NotificationSchedule = "30 4 * * 5,2,4",
+                                PollOptions = new[] {"Зал", "Онлайн", "Не приду"},
+                                TelegramChatId = "-1001332112170",
                             },
                     }
             );

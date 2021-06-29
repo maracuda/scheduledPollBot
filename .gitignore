@@ -6,3 +6,4 @@ obj
 *.sln.DotSettings.user
 .idea
 TestResult.xml
+/src/TelegramInteraction/Settings/settings.txt

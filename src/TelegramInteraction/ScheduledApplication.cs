@@ -23,7 +23,7 @@ namespace TelegramInteraction
 
             foreach(var sportGroup in groups)
             {
-                builder.Schedule(sportGroup.Name, new CrontabWithOffsetScheduler(sportGroup.TrainingSchedule, TimeSpan.FromDays(-1)),
+                builder.Schedule(sportGroup.Name, new CrontabWithOffsetScheduler(sportGroup.TrainingSchedule, -TimeSpan.FromDays(1)),
                                  context 
                                      =>
                                      {
@@ -38,7 +38,8 @@ namespace TelegramInteraction
                                          return sendPollWork.ExecuteAsync(
                                              context.CancellationToken,
                                              sportGroup.TelegramChatId,
-                                             trainingTime.Value
+                                             trainingTime.Value,
+                                             sportGroup.Title
                                          );
                                      }
                 );

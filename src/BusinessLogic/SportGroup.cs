@@ -16,5 +16,10 @@
         /// Имя группы
         /// </summary>
         public string Name { get; set; }
+
+        /// <summary>
+        /// Короткое имя для опроса
+        /// </summary>
+        public string Title { get; set; }
     }
 }

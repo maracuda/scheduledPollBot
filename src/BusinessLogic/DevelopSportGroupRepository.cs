@@ -20,6 +20,7 @@ namespace BusinessLogic
                             Name = "TestGroup",
                             TrainingSchedule = applicationSettings.GetString("Schedule"),
                             TelegramChatId = applicationSettings.GetString("ChatId"),
+                            Title = "Title",
                         },
                 });
         }

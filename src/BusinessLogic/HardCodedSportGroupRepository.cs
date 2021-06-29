@@ -26,6 +26,15 @@ namespace BusinessLogic
                                 Title = "Йога",
                                 PollOptions = new[] {"Пойду в зал", "Пойду онлайн", "Не пойду", "Возможно",},
                             },
+                        new SportGroup
+                            {
+                                Name = "Anna Vetlugina",
+                                Title = "Фитнес",
+                                TrainingSchedule = "0 5 * * 1,3,5",
+                                NotificationSchedule = "30 4 * * 5,2,4",
+                                PollOptions = new[] {"Зал", "Онлайн", "Не приду"},
+                                TelegramChatId = "-1001332112170",
+                            },
                     }
             );
         }

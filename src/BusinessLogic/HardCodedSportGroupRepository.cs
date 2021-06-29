@@ -11,13 +11,13 @@ namespace BusinessLogic
                         new SportGroup
                             {
                                 Name = "A.Petrazhickiy",
-                                NotificationSchedule = "0 5 * * 1,4",
+                                TrainingSchedule = "0 5 * * 2,5",
                                 TelegramChatId = "-1001318882712",
                             },
                         new SportGroup
                             {
                                 Name = "E.Petrazhickaya",
-                                NotificationSchedule = "0 5 * * 1,3",
+                                TrainingSchedule = "0 5 * * 2,4",
                                 TelegramChatId = "-1001286172835",
                             },
                     }

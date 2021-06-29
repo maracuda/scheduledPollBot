@@ -17,10 +17,10 @@ namespace BusinessLogic
             this.telegramBotClient = telegramBotClient;
         }
 
-        public async Task ExecuteAsync(CancellationToken token, string chatId)
+        public async Task ExecuteAsync(CancellationToken token, string chatId, DateTimeOffset trainingTime)
         {
             await telegramBotClient.SendPollAsync(chatId,
-                                                  $"Йога {DateTime.Now.AddDays(1).ToShortDateString()}",
+                                                  $"Йога {trainingTime.Date.ToShortDateString()}",
                                                   new[] {"Пойду в зал", "Пойду онлайн", "Не пойду", "Возможно",},
                                                   isAnonymous: false,
                                                   cancellationToken: token

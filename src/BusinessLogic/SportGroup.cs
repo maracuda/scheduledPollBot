@@ -3,9 +3,9 @@
     public class SportGroup
     {
         /// <summary>
-        /// Расписание уведомлений в Cron формате
+        /// Расписание занятий в Cron формате
         /// </summary>
-        public string NotificationSchedule { get; set; }
+        public string TrainingSchedule { get; set; }
 
         /// <summary>
         /// Id чата в телеграмме

@@ -18,7 +18,7 @@ namespace BusinessLogic
                     new SportGroup
                         {
                             Name = "TestGroup",
-                            NotificationSchedule = applicationSettings.GetString("Schedule"),
+                            TrainingSchedule = applicationSettings.GetString("Schedule"),
                             TelegramChatId = applicationSettings.GetString("ChatId"),
                         },
                 });

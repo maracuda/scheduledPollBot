@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 
 using BusinessLogic;
 
@@ -22,9 +23,24 @@ namespace TelegramInteraction
 
             foreach(var sportGroup in groups)
             {
-                builder.Schedule(sportGroup.Name, Scheduler.Crontab(sportGroup.NotificationSchedule),
+                builder.Schedule(sportGroup.Name, new CrontabWithOffsetScheduler(sportGroup.TrainingSchedule, TimeSpan.FromDays(-1)),
                                  context 
-                                     => sendPollWork.ExecuteAsync(context.CancellationToken, sportGroup.TelegramChatId)
+                                     =>
+                                     {
+                                         // NOTE: не хотелось тащить Scheduler.Crontab внутрь sendPollWork.ExecuteAsync
+                                         // Но может это и правильно
+                                         var trainingTime = Scheduler.Crontab(sportGroup.TrainingSchedule).ScheduleNext(DateTimeOffset.Now);
+                                         if(!trainingTime.HasValue)
+                                         {
+                                             throw new Exception("Can't define training time");
+                                         }
+                                         
+                                         return sendPollWork.ExecuteAsync(
+                                             context.CancellationToken,
+                                             sportGroup.TelegramChatId,
+                                             trainingTime.Value
+                                         );
+                                     }
                 );
             }
         }

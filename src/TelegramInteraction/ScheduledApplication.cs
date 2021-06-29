@@ -39,7 +39,8 @@ namespace TelegramInteraction
                                              context.CancellationToken,
                                              sportGroup.TelegramChatId,
                                              trainingTime.Value,
-                                             sportGroup.Title
+                                             sportGroup.Title,
+                                             sportGroup.PollOptions
                                          );
                                      }
                 );

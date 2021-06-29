@@ -26,5 +26,10 @@
         /// Короткое имя для опроса
         /// </summary>
         public string Title { get; set; }
+
+        /// <summary>
+        /// Варианты вопросов в опросе на занятие
+        /// </summary>
+        public string[] PollOptions { get; set; }
     }
 }

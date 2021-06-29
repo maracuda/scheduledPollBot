@@ -15,6 +15,7 @@ namespace BusinessLogic
                                 NotificationSchedule = "0 5 * * 1,4",
                                 TelegramChatId = "-1001318882712",
                                 Title = "Йога",
+                                PollOptions = new[] {"Пойду в зал", "Пойду онлайн", "Не пойду", "Возможно",},
                             },
                         new SportGroup
                             {
@@ -23,6 +24,7 @@ namespace BusinessLogic
                                 NotificationSchedule = "0 5 * * 1,3",
                                 TelegramChatId = "-1001286172835",
                                 Title = "Йога",
+                                PollOptions = new[] {"Пойду в зал", "Пойду онлайн", "Не пойду", "Возможно",},
                             },
                     }
             );

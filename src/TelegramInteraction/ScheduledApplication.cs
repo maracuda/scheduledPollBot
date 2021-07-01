@@ -43,7 +43,7 @@ namespace TelegramInteraction
             }
 
             return telegramBotClient.SendPollAsync(sportGroup.TelegramChatId,
-                                                   $"{sportGroup.Title} {trainingTime.Value.Date.ToShortDateString()}",
+                                                   $"{sportGroup.Title} {trainingTime.Value.Date:dd.MM}",
                                                    sportGroup.PollOptions,
                                                    isAnonymous: false,
                                                    cancellationToken: context.CancellationToken

@@ -32,8 +32,8 @@ namespace TelegramInteraction
             }
         }
 
-        private static Task SendPollAsync(SportGroup sportGroup, ITelegramBotClient telegramBotClient,
-                                          IScheduledActionContext context
+        private static async Task SendPollAsync(SportGroup sportGroup, ITelegramBotClient telegramBotClient,
+                                                IScheduledActionContext context
         )
         {
             var trainingTime = Scheduler.Crontab(sportGroup.TrainingSchedule).ScheduleNext(DateTimeOffset.Now);
@@ -42,12 +42,16 @@ namespace TelegramInteraction
                 throw new Exception("Can't define training time");
             }
 
-            return telegramBotClient.SendPollAsync(sportGroup.TelegramChatId,
-                                                   $"{sportGroup.Title} {trainingTime.Value.Date:dd.MM}",
-                                                   sportGroup.PollOptions,
-                                                   isAnonymous: false,
-                                                   cancellationToken: context.CancellationToken
+            var pollSendResult = await telegramBotClient.SendPollAsync(sportGroup.TelegramChatId,
+                                                                $"{sportGroup.Title} {trainingTime.Value.Date:dd.MM}",
+                                                                sportGroup.PollOptions,
+                                                                isAnonymous: false,
+                                                                cancellationToken: context.CancellationToken
             );
+
+            var pollId = pollSendResult.Poll.Id;
+            
+            
         }
     }
 }

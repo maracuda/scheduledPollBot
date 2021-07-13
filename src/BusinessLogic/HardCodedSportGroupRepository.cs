@@ -8,6 +8,7 @@ namespace BusinessLogic
         {
             return Task.FromResult(new[]
                     {
+                        // NOTE: в Heroku время по utc, поэтому во всех расписаниях время по utc
                         new SportGroup
                             {
                                 Name = "A.Petrazhickiy",
@@ -34,6 +35,15 @@ namespace BusinessLogic
                                 NotificationSchedule = "30 4 * * 5,2,4",
                                 PollOptions = new[] {"Зал", "Онлайн", "Не приду"},
                                 TelegramChatId = "-1001332112170",
+                            },
+                        new SportGroup
+                            {
+                                Name = "Anna Vetlugina evening",
+                                Title = "Вечерний фитнес",
+                                TrainingSchedule = "0 14 * * 2,4",
+                                NotificationSchedule = "0 5 * * 2,4",
+                                PollOptions = new[] {"Зал", "Онлайн", "Не приду"},
+                                TelegramChatId = "-1001290388650",
                             },
                     }
             );

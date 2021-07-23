@@ -27,12 +27,12 @@ namespace BusinessLogic
                                 Title = "Йога",
                                 PollOptions = new[] {"Пойду в зал", "Пойду онлайн", "Не пойду", "Возможно",},
                             },
-                        new SportGroup
+                        /*new SportGroup
                             {
                                 Name = "Anna Vetlugina",
                                 Title = "Фитнес",
                                 TrainingSchedule = "0 4 * * 1,3,5",
-                                NotificationSchedule = "30 4 * * 5,2,4",
+                                NotificationSchedule = "0 6 * * 5,2,4",
                                 PollOptions = new[] {"Зал", "Онлайн", "Не приду"},
                                 TelegramChatId = "-1001332112170",
                             },
@@ -41,10 +41,10 @@ namespace BusinessLogic
                                 Name = "Anna Vetlugina evening",
                                 Title = "Вечерний фитнес",
                                 TrainingSchedule = "0 14 * * 2,4",
-                                NotificationSchedule = "0 5 * * 2,4",
+                                NotificationSchedule = "0 6 * * 2,4",
                                 PollOptions = new[] {"Зал", "Онлайн", "Не приду"},
                                 TelegramChatId = "-1001290388650",
-                            },
+                            },*/
                     }
             );
         }

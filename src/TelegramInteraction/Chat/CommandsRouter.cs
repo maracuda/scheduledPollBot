@@ -21,17 +21,19 @@ namespace TelegramInteraction.Chat
             var commandText = message.Text.Split(' ').First();
             var chatCommand = commands.SingleOrDefault(c => c.SupportedTemplates.Contains(commandText));
 
-            if(chatCommand == null)
+            if(chatCommand != null)
+            {
+                await chatCommand.ExecuteAsync(message);
+            }
+            
+            if(commandText.StartsWith("/"))
             {
                 await telegramBotClient.SendTextMessageAsync(
                     chatId: message.Chat.Id,
                     text: $"Не знаю что ответить, попробуй что-то из знакомого:\r\n"
                           + $"{string.Join("\r\n", commands.SelectMany(c => c.SupportedTemplates))}"
                 );
-                return;
             }
-
-            await chatCommand.ExecuteAsync(message);
         }
 
         private readonly ITelegramBotClient telegramBotClient;

@@ -45,6 +45,15 @@ namespace BusinessLogic
                                 PollOptions = new[] {"Зал", "Онлайн", "Не приду"},
                                 TelegramChatId = "-1001290388650",
                             },
+                        new SportGroup
+                            {
+                                Name = "E.Petrazhickaya on NV",
+                                Title = "Йога",
+                                TrainingSchedule = "15 7 * * 1,3,5",
+                                NotificationSchedule = "0 5 * * 0,2,4",
+                                PollOptions = new[] {"Пойду в зал", "Пойду онлайн", "Не пойду", "Возможно",},
+                                TelegramChatId = "-389442739",
+                            },
                     }
             );
         }

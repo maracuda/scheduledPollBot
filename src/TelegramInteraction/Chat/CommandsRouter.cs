@@ -24,6 +24,7 @@ namespace TelegramInteraction.Chat
             if(chatCommand != null)
             {
                 await chatCommand.ExecuteAsync(message);
+                return;
             }
             
             if(commandText.StartsWith("/"))

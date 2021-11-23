@@ -3,6 +3,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 
 using BusinessLogic;
+using BusinessLogic.CreatePolls;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -74,6 +75,7 @@ namespace TelegramInteraction
             }
             
             container.Register<ICommandsRouter, CommandsRouter>();
+            container.Register<ICreatePollService, CreatePollService>();
 
             container.Collection.Register<IChatCommand>(typeof(PingCommand).Assembly);
             

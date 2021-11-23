@@ -29,7 +29,7 @@ namespace TelegramInteraction
         public MultiApplication()
             : base(builder => builder
                               .AddAspNetCore(SetupAspNetCore)
-                              .AddApplication(new ScheduledApplication())
+                              // .AddApplication(new ScheduledApplication())
                               .AddApplication(new ChatApplication())
                               .AddScheduled(SetupPinger)
                               .UseParallelInitialization()
@@ -75,7 +75,7 @@ namespace TelegramInteraction
             }
             
             container.Register<ICommandsRouter, CommandsRouter>();
-            container.Register<ICreatePollService, CreatePollService>();
+            container.Register<ICreatePollService, CreatePollService>(Lifestyle.Singleton);
 
             container.Collection.Register<IChatCommand>(typeof(PingCommand).Assembly);
             

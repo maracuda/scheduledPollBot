@@ -1,7 +1,5 @@
 ﻿using System;
 
-using Telegram.Bot.Types;
-
 namespace BusinessLogic.CreatePolls
 {
     public class CreatePollRequest
@@ -11,6 +9,6 @@ namespace BusinessLogic.CreatePolls
         public int UserId { get; set; }
         public DateTime CreateAt { get; set; }
         public bool IsPending { get; set; }
-        public Poll Poll { get; set; }
+        public string PollName { get; set; }
     }
 }

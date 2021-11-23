@@ -48,6 +48,7 @@ namespace TelegramInteraction
                                                    isAnonymous: false,
                                                    cancellationToken: context.CancellationToken
             );
+            return Task.CompletedTask;
         }
     }
 }

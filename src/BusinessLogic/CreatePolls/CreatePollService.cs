@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-using Telegram.Bot.Types;
-
 namespace BusinessLogic.CreatePolls
 {
     public class CreatePollService : ICreatePollService
@@ -30,13 +28,17 @@ namespace BusinessLogic.CreatePolls
         public Task<CreatePollRequest> FindPendingAsync(long chatId, int userId)
         {
             return Task.FromResult(
-                createPollRequests.Values.FirstOrDefault(v => v.IsPending && v.ChatId == chatId && v.UserId == userId)
+                createPollRequests
+                    .Values
+                    .Where(v => v.IsPending && v.ChatId == chatId && v.UserId == userId)
+                    .OrderByDescending(v => v.CreateAt)
+                    .FirstOrDefault()
             );
         }
 
-        public Task AddPollAsync(Guid requestId, Poll poll)
+        public Task SaveAsync(CreatePollRequest pendingRequest)
         {
-            createPollRequests[requestId].Poll = poll;
+            createPollRequests[pendingRequest.Id] = pendingRequest;
             return Task.CompletedTask;
         }
     }

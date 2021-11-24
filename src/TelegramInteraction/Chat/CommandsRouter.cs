@@ -24,20 +24,14 @@ namespace TelegramInteraction.Chat
             switch(update.Update.Type)
             {
             case UpdateType.Message:
-                await RouteMessage(update.Update.Message);
+                await RouteMessage(update.Update.Message, update.Update);
                 break;
             }
         }
 
-        private async Task RouteMessage(Message message)
+        private async Task RouteMessage(Message message, Update update)
         {
-            if(message == null || message.Type != MessageType.Text)
-            {
-                return;
-            }
-
-            var commandText = message.Text.Split(' ').First();
-            var chatCommands = commands.Where(c => c.CanHandle(message)).ToArray();
+            var chatCommands = commands.Where(c => c.CanHandle(update)).ToArray();
 
             if(chatCommands.Count() > 1)
             {
@@ -51,10 +45,11 @@ namespace TelegramInteraction.Chat
 
             if(command != null)
             {
-                await command.ExecuteAsync(message);
+                await command.ExecuteAsync(update);
                 return;
             }
 
+            var commandText = message.Text.Split(' ').First();
             if(commandText.StartsWith("/"))
             {
                 await telegramBotClient.SendTextMessageAsync(

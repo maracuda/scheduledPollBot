@@ -6,7 +6,7 @@ namespace TelegramInteraction.Chat
 {
     public interface IChatCommand
     {
-        Task ExecuteAsync(Message message);
-        bool CanHandle(Message message);
+        Task ExecuteAsync(Update update);
+        bool CanHandle(Update update);
     }
 }

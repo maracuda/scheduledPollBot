@@ -12,17 +12,18 @@ namespace TelegramInteraction.Chat
             this.telegramBotClient = telegramBotClient;
         }
 
-        public bool CanHandle(Message message) => message.Text.Contains("/help") || message.Text.Contains("/start");
-
-        public async Task ExecuteAsync(Message message)
+        public async Task ExecuteAsync(Update update)
         {
             await telegramBotClient.SendTextMessageAsync(
-                chatId: message.Chat.Id,
+                chatId: update.Message.Chat.Id,
                 text: "Привет\r\nЯ умею посылать опросы по расписанию\r\n"
                       + "Если ты хочешь себе опрос, то напиши @maracuda\r\n"
                       + "Мой код лежит тут https://github.com/maracuda/KonturSportBot, приходи и научи меня делать что-то интересное ;)"
             );
         }
+
+        public bool CanHandle(Update update) =>
+            update.Message != null && (update.Message.Text.Contains("/help") || update.Message.Text.Contains("/start"));
 
         private readonly ITelegramBotClient telegramBotClient;
     }

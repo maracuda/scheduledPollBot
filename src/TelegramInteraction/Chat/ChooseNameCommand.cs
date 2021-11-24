@@ -19,37 +19,39 @@ namespace TelegramInteraction.Chat
             this.createPollService = createPollService;
         }
 
-        public async Task ExecuteAsync(Message message)
+        public async Task ExecuteAsync(Update update)
         {
-            var pendingRequest = await createPollService.FindPendingAsync(message.Chat.Id, message.From.Id);
+            var pendingRequest = await createPollService.FindPendingAsync(update.Message.Chat.Id, update.Message.From.Id);
 
-            var name = message.Text;
+            var name = update.Message.Text;
 
             pendingRequest.PollName = name;
             await createPollService.SaveAsync(pendingRequest);
-            
-            await telegramBotClient.SendTextMessageAsync(message.Chat.Id, $"Ok, name is {name}");
-            
-            await telegramBotClient.SendTextMessageAsync(message.Chat.Id, $"Choose poll type",
-                replyMarkup:new InlineKeyboardMarkup(new []
-                    {
-                        new InlineKeyboardButton
-                            {
-                                Text = "Anonymous",
-                                CallbackData = "anonymous",
-                            },
-                        new InlineKeyboardButton
-                            {
-                                Text = "Non-Anonymous",
-                                CallbackData = "nonAnonymous",
-                            },
-                    })
-                );
+
+            await telegramBotClient.SendTextMessageAsync(update.Message.Chat.Id, $"Ok, name is {name}");
+
+            await telegramBotClient.SendTextMessageAsync(update.Message.Chat.Id,
+                                                         $"Choose poll type",
+                                                         replyMarkup: new InlineKeyboardMarkup(new[]
+                                                                 {
+                                                                     new InlineKeyboardButton
+                                                                         {
+                                                                             Text = "Anonymous",
+                                                                             CallbackData = "anonymous",
+                                                                         },
+                                                                     new InlineKeyboardButton
+                                                                         {
+                                                                             Text = "Non-Anonymous",
+                                                                             CallbackData = "nonAnonymous",
+                                                                         },
+                                                                 }
+                                                         )
+            );
         }
 
-        public bool CanHandle(Message message
-        ) =>
-            message.ReplyToMessage != null
-            && message.ReplyToMessage.Text.Contains("Choose name");
+        public bool CanHandle(Update update) =>
+            update.Message != null
+            && update.Message.ReplyToMessage != null
+            && update.Message.ReplyToMessage.Text.Contains("Choose name");
     }
 }

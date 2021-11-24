@@ -20,22 +20,23 @@ namespace TelegramInteraction.Chat
             this.createPollService = createPollService;
         }
 
-        public async Task ExecuteAsync(Message message)
+        public async Task ExecuteAsync(Update update)
         {
-            await createPollService.CreateAsync(message.Chat.Id, message.From.Id);
-            
-            await telegramBotClient.SendTextMessageAsync(message.Chat.Id,
+            await createPollService.CreateAsync(update.Message.Chat.Id, update.Message.From.Id);
+
+            await telegramBotClient.SendTextMessageAsync(update.Message.Chat.Id,
                                                          "Choose name"
                                                          + Environment.NewLine
                                                          + "example: \"Training on Saturday\"<icon>",
-                                                         replyMarkup:new ForceReplyMarkup()
+                                                         replyMarkup: new ForceReplyMarkup()
                 // Создавать нужно в отдельном чате, чтобы другие из группы не видели
-                
+
                 // Создали в чате с ботом
                 // Позвали в групповой чат, попросили бота постить результат в этом чате
             );
         }
 
-        public bool CanHandle(Message message) => message.Text.Contains("/new");
+        public bool CanHandle(Update update) =>
+            update.Message != null && update.Message.Text.Contains("/new");
     }
 }

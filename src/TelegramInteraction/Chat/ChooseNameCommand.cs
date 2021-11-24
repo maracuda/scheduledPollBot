@@ -1,9 +1,11 @@
+using System;
 using System.Threading.Tasks;
 
 using BusinessLogic.CreatePolls;
 
 using Telegram.Bot;
 using Telegram.Bot.Types;
+using Telegram.Bot.Types.ReplyMarkups;
 
 namespace TelegramInteraction.Chat
 {
@@ -23,17 +25,28 @@ namespace TelegramInteraction.Chat
             
             var pendingRequest = await createPollService.FindPendingAsync(message.Chat.Id, message.From.Id);
 
-            var name = message.Text.Split(" ")[1];
+            var name = message.Text;
 
             pendingRequest.PollName = name;
             await createPollService.SaveAsync(pendingRequest);
             
-            await telegramBotClient.SendTextMessageAsync(message.Chat.Id, $"Ok, name is {name}"
-                // Создавать нужно в отдельном чате, чтобы другие из группы не видели
-                
-                // Создали в чате с ботом
-                // Позвали в групповой чат, попросили бота постить результат в этом чате
-            );
+            await telegramBotClient.SendTextMessageAsync(message.Chat.Id, $"Ok, name is {name}");
+            
+            await telegramBotClient.SendTextMessageAsync(message.Chat.Id, $"Choose poll type",
+                replyMarkup:new InlineKeyboardMarkup(new []
+                    {
+                        new InlineKeyboardButton
+                            {
+                                Text = "Anonymous",
+                                CallbackData = "anonymous",
+                            },
+                        new InlineKeyboardButton
+                            {
+                                Text = "Non-Anonymous",
+                                CallbackData = "nonAnonymous",
+                            },
+                    })
+                );
         }
 
         public bool CanHandle(Message message

@@ -20,6 +20,7 @@ namespace TelegramInteraction.Chat
 
         public async Task ExecuteAsync(Message message)
         {
+            
             var pendingRequest = await createPollService.FindPendingAsync(message.Chat.Id, message.From.Id);
 
             var name = message.Text.Split(" ")[1];
@@ -35,6 +36,9 @@ namespace TelegramInteraction.Chat
             );
         }
 
-        public string[] SupportedTemplates => new[] { "/name" };
+        public bool CanHandle(Message message
+        ) =>
+            message.ReplyToMessage != null
+            && message.ReplyToMessage.Text.Contains("Choose name");
     }
 }

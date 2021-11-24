@@ -1,9 +1,11 @@
+using System;
 using System.Threading.Tasks;
 
 using BusinessLogic.CreatePolls;
 
 using Telegram.Bot;
 using Telegram.Bot.Types;
+using Telegram.Bot.Types.ReplyMarkups;
 
 namespace TelegramInteraction.Chat
 {
@@ -22,7 +24,11 @@ namespace TelegramInteraction.Chat
         {
             await createPollService.CreateAsync(message.Chat.Id, message.From.Id);
             
-            await telegramBotClient.SendTextMessageAsync(message.Chat.Id, "Choose name" + "F.e. \"My awesome poll\""
+            await telegramBotClient.SendTextMessageAsync(message.Chat.Id,
+                                                         "Choose name"
+                                                         + Environment.NewLine
+                                                         + "example: \"Training on Saturday\"<icon>",
+                                                         replyMarkup:new ForceReplyMarkup()
                 // Создавать нужно в отдельном чате, чтобы другие из группы не видели
                 
                 // Создали в чате с ботом
@@ -30,6 +36,6 @@ namespace TelegramInteraction.Chat
             );
         }
 
-        public string[] SupportedTemplates => new[] { "/new" };
+        public bool CanHandle(Message message) => message.Text.Contains("/new");
     }
 }

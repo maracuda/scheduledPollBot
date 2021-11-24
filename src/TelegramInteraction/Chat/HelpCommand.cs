@@ -12,7 +12,7 @@ namespace TelegramInteraction.Chat
             this.telegramBotClient = telegramBotClient;
         }
 
-        public string[] SupportedTemplates => new[] {"/help", "/start"};
+        public bool CanHandle(Message message) => message.Text.Contains("/help") || message.Text.Contains("/start");
 
         public async Task ExecuteAsync(Message message)
         {

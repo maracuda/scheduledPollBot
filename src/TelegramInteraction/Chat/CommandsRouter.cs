@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 using Telegram.Bot;
@@ -19,20 +20,30 @@ namespace TelegramInteraction.Chat
         public async Task RouteAsync(Message message)
         {
             var commandText = message.Text.Split(' ').First();
-            var chatCommand = commands.SingleOrDefault(c => c.SupportedTemplates.Contains(commandText));
+            var chatCommands = commands.Where(c => c.CanHandle(message)).ToArray();
 
-            if(chatCommand != null)
+            if(chatCommands.Count() > 1)
             {
-                await chatCommand.ExecuteAsync(message);
+                throw new Exception(
+                    $"Can't choose between commands "
+                    + $"{string.Join(",", chatCommands.Select(c => c.GetType().Name))}"
+                );
+            }
+
+            var command = chatCommands.SingleOrDefault();
+
+            if(command != null)
+            {
+                await command.ExecuteAsync(message);
                 return;
             }
-            
+
             if(commandText.StartsWith("/"))
             {
                 await telegramBotClient.SendTextMessageAsync(
                     chatId: message.Chat.Id,
                     text: $"Не знаю что ответить, попробуй что-то из знакомого:\r\n"
-                          + $"{string.Join("\r\n", commands.SelectMany(c => c.SupportedTemplates))}"
+                          + $"{string.Join("\r\n", new[] { "/help", "/start", "/new" })}"
                 );
             }
         }

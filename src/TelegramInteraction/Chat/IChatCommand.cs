@@ -7,6 +7,6 @@ namespace TelegramInteraction.Chat
     public interface IChatCommand
     {
         Task ExecuteAsync(Message message);
-        string[] SupportedTemplates { get; }
+        bool CanHandle(Message message);
     }
 }

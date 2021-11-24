@@ -28,21 +28,15 @@ namespace TelegramInteraction.Chat
             Console.Title = me.Username;
 
             bot.OnReceiveError += (_, args) => log.Error(args.ApiRequestException);
-            bot.OnMessage += BotOnMessageReceived;
+            bot.OnUpdate += BotOnMessageReceived;
 
             bot.StartReceiving(new [] {UpdateType.Message}, cancellationToken);
             log.Info($"Start listening for @{me.Username}");
         }
 
-        private async void BotOnMessageReceived(object sender, MessageEventArgs messageEventArgs)
+        private async void BotOnMessageReceived(object? sender, UpdateEventArgs updateEventArgs)
         {
-            var message = messageEventArgs.Message;
-            if(message == null || message.Type != MessageType.Text)
-            {
-                return;
-            }
-
-            await commandsRouter.RouteAsync(message);
+            await commandsRouter.RouteAsync(updateEventArgs);
         }
 
         private readonly ILog log;

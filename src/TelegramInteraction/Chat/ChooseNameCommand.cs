@@ -1,4 +1,3 @@
-using System;
 using System.Threading.Tasks;
 
 using BusinessLogic.CreatePolls;
@@ -22,7 +21,6 @@ namespace TelegramInteraction.Chat
 
         public async Task ExecuteAsync(Message message)
         {
-            
             var pendingRequest = await createPollService.FindPendingAsync(message.Chat.Id, message.From.Id);
 
             var name = message.Text;

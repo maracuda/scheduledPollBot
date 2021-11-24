@@ -3,7 +3,9 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using Telegram.Bot;
+using Telegram.Bot.Args;
 using Telegram.Bot.Types;
+using Telegram.Bot.Types.Enums;
 
 namespace TelegramInteraction.Chat
 {
@@ -17,8 +19,23 @@ namespace TelegramInteraction.Chat
             this.commands = commands;
         }
 
-        public async Task RouteAsync(Message message)
+        public async Task RouteAsync(UpdateEventArgs update)
         {
+            switch(update.Update.Type)
+            {
+            case UpdateType.Message:
+                await RouteMessage(update.Update.Message);
+                break;
+            }
+        }
+
+        private async Task RouteMessage(Message message)
+        {
+            if(message == null || message.Type != MessageType.Text)
+            {
+                return;
+            }
+
             var commandText = message.Text.Split(' ').First();
             var chatCommands = commands.Where(c => c.CanHandle(message)).ToArray();
 

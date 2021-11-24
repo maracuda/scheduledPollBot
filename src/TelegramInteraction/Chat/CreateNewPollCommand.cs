@@ -29,6 +29,7 @@ namespace TelegramInteraction.Chat
                                                          + Environment.NewLine
                                                          + "example: \"Training on Saturday\"<icon>",
                                                          replyMarkup: new ForceReplyMarkup()
+                
                 // Создавать нужно в отдельном чате, чтобы другие из группы не видели
 
                 // Создали в чате с ботом

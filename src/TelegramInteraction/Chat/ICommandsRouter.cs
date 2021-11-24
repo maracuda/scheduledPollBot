@@ -6,6 +6,6 @@ namespace TelegramInteraction.Chat
 {
     public interface ICommandsRouter
     {
-        Task RouteAsync(UpdateEventArgs update);
+        Task RouteAsync(UpdateEventArgs updateEventArgs);
     }
 }

@@ -10,5 +10,6 @@ namespace BusinessLogic.CreatePolls
         public DateTime CreateAt { get; set; }
         public bool IsPending { get; set; }
         public string PollName { get; set; }
+        public bool IsAnonymous { get; set; }
     }
 }

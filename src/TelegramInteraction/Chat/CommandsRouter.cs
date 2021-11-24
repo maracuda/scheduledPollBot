@@ -19,18 +19,10 @@ namespace TelegramInteraction.Chat
             this.commands = commands;
         }
 
-        public async Task RouteAsync(UpdateEventArgs update)
+        public async Task RouteAsync(UpdateEventArgs updateEventArgs)
         {
-            switch(update.Update.Type)
-            {
-            case UpdateType.Message:
-                await RouteMessage(update.Update.Message, update.Update);
-                break;
-            }
-        }
+            var update = updateEventArgs.Update;
 
-        private async Task RouteMessage(Message message, Update update)
-        {
             var chatCommands = commands.Where(c => c.CanHandle(update)).ToArray();
 
             if(chatCommands.Count() > 1)
@@ -49,6 +41,7 @@ namespace TelegramInteraction.Chat
                 return;
             }
 
+            /*
             var commandText = message.Text.Split(' ').First();
             if(commandText.StartsWith("/"))
             {
@@ -57,7 +50,8 @@ namespace TelegramInteraction.Chat
                     text: $"Не знаю что ответить, попробуй что-то из знакомого:\r\n"
                           + $"{string.Join("\r\n", new[] { "/help", "/start", "/new" })}"
                 );
-            }
+            }*/
+            ;
         }
 
         private readonly ITelegramBotClient telegramBotClient;

@@ -30,7 +30,7 @@ namespace TelegramInteraction.Chat
             bot.OnReceiveError += (_, args) => log.Error(args.ApiRequestException);
             bot.OnUpdate += BotOnMessageReceived;
 
-            bot.StartReceiving(new [] {UpdateType.Message}, cancellationToken);
+            bot.StartReceiving(new [] {UpdateType.Message, UpdateType.CallbackQuery}, cancellationToken);
             log.Info($"Start listening for @{me.Username}");
         }
 

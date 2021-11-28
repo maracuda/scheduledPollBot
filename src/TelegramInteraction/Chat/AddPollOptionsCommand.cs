@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Threading.Tasks;
 
 using BusinessLogic.CreatePolls;
@@ -9,9 +8,9 @@ using Telegram.Bot.Types;
 
 namespace TelegramInteraction.Chat
 {
-    public class AddPollOptionCommand : IChatCommand
+    public class AddPollOptionsCommand : IChatCommand
     {
-        public AddPollOptionCommand(ITelegramBotClient telegramBotClient, ICreatePollService createPollService)
+        public AddPollOptionsCommand(ITelegramBotClient telegramBotClient, ICreatePollService createPollService)
         {
             this.telegramBotClient = telegramBotClient;
             this.createPollService = createPollService;

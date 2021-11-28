@@ -4,6 +4,7 @@ using BusinessLogic.CreatePolls;
 
 using Telegram.Bot;
 using Telegram.Bot.Types;
+using Telegram.Bot.Types.ReplyMarkups;
 
 namespace TelegramInteraction.Chat
 {
@@ -27,7 +28,7 @@ namespace TelegramInteraction.Chat
             var anonymousString = isAnonymous ?  "anonymous" : "non-anonymous";
             await telegramBotClient.SendTextMessageAsync(chatId, $"Ok, poll is {anonymousString}");
             
-            await telegramBotClient.SendTextMessageAsync(chatId, $"Please add options");
+            await telegramBotClient.SendTextMessageAsync(chatId, $"Please add options", replyMarkup:new ForceReplyMarkup());
         }
 
         private static bool DefineIsAnonymous(Update update)

@@ -4,8 +4,6 @@ using System.Threading.Tasks;
 
 using Telegram.Bot;
 using Telegram.Bot.Args;
-using Telegram.Bot.Types;
-using Telegram.Bot.Types.Enums;
 
 namespace TelegramInteraction.Chat
 {
@@ -54,6 +52,7 @@ namespace TelegramInteraction.Chat
             ;
         }
 
+        // ReSharper disable once NotAccessedField.Local
         private readonly ITelegramBotClient telegramBotClient;
         private readonly IChatCommand[] commands;
     }

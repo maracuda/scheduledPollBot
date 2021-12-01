@@ -21,37 +21,17 @@ namespace TelegramInteraction.Chat
 
         public async Task ExecuteAsync(Update update)
         {
-            var pendingRequest = await createPollService.FindPendingAsync(update.Message.Chat.Id, update.Message.From.Id);
+            var chatId = update.CallbackQuery.Message.Chat.Id;
+            var pendingRequest = await createPollService.FindPendingAsync(chatId, update.CallbackQuery.From.Id);
 
+            /*
             var name = update.Message.Text;
 
             pendingRequest.PollName = name;
-            await createPollService.SaveAsync(pendingRequest);
-
-            await telegramBotClient.SendTextMessageAsync(update.Message.Chat.Id, $"Ok, name is {name}");
-
-            await telegramBotClient.SendTextMessageAsync(update.Message.Chat.Id,
-                                                         $"Choose poll type",
-                                                         replyMarkup: new InlineKeyboardMarkup(new[]
-                                                                 {
-                                                                     new InlineKeyboardButton
-                                                                         {
-                                                                             Text = "Anonymous",
-                                                                             CallbackData = "anonymous",
-                                                                         },
-                                                                     new InlineKeyboardButton
-                                                                         {
-                                                                             Text = "Non-Anonymous",
-                                                                             CallbackData = "nonAnonymous",
-                                                                         },
-                                                                 }
-                                                         )
-            );
+            await createPollService.SaveAsync(pendingRequest);*/
         }
 
         public bool CanHandle(Update update) =>
-            update.Message != null
-            && update.Message.ReplyToMessage != null
-            && update.Message.ReplyToMessage.Text.Contains("Choose name");
+            update.CallbackQuery != null && update.CallbackQuery.Data == CallbackConstants.NameCallback;
     }
 }

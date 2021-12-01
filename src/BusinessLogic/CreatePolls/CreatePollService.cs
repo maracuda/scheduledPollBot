@@ -14,6 +14,12 @@ namespace BusinessLogic.CreatePolls
             createPollRequests = new Dictionary<Guid, CreatePollRequest>();
         }
 
+        public Task CreateAsync(CreatePollRequest createPollRequest)
+        {
+            createPollRequests.Add(createPollRequest.Id, createPollRequest);
+            return Task.FromResult(createPollRequest.Id);
+        }
+
         public Task<Guid> CreateAsync(long chatId, int userId)
         {
             var createPollRequest = new CreatePollRequest

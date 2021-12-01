@@ -22,18 +22,60 @@ namespace TelegramInteraction.Chat
 
         public async Task ExecuteAsync(Update update)
         {
-            await createPollService.CreateAsync(update.Message.Chat.Id, update.Message.From.Id);
+            var createPollRequest = new CreatePollRequest
+                {
+                    Options = new[] { "First option", "Second option", },
+                    IsAnonymous = true,
+                    PollName = "Choose poll name",
+                    UserId = update.Message.From.Id,
+                    ChatId = update.Message.Chat.Id,
+                    CreateAt = DateTime.Now,
+                    IsPending = true,
+                    Id = Guid.NewGuid(),
+                };
+            await createPollService.CreateAsync(createPollRequest);
 
-            await telegramBotClient.SendTextMessageAsync(update.Message.Chat.Id,
-                                                         "Choose name"
-                                                         + Environment.NewLine
-                                                         + "example: \"Training on Saturday\"<icon>",
-                                                         replyMarkup: new ForceReplyMarkup()
-                
-                // Создавать нужно в отдельном чате, чтобы другие из группы не видели
-
-                // Создали в чате с ботом
-                // Позвали в групповой чат, попросили бота постить результат в этом чате
+            await telegramBotClient.SendPollAsync(createPollRequest.ChatId,
+                                                  createPollRequest.PollName,
+                                                  createPollRequest.Options,
+                                                  isAnonymous: createPollRequest.IsAnonymous,
+                                                  replyMarkup: new InlineKeyboardMarkup(
+                                                      new[]
+                                                          {
+                                                              new[]
+                                                                  {
+                                                                      new InlineKeyboardButton
+                                                                          {
+                                                                              Text = "Name",
+                                                                              CallbackData = "change_name",
+                                                                          },
+                                                                      new InlineKeyboardButton
+                                                                          {
+                                                                              Text = "Anonymous",
+                                                                              CallbackData =
+                                                                                  "change_anonymous",
+                                                                          },
+                                                                  },
+                                                              new[]
+                                                                  {
+                                                                      new InlineKeyboardButton
+                                                                          {
+                                                                              Text = "Options",
+                                                                              CallbackData =
+                                                                                  "change_options",
+                                                                          },
+                                                                  },
+                                                              new[]
+                                                                  {
+                                                                      new InlineKeyboardButton
+                                                                          {
+                                                                              Text = "Finish",
+                                                                              CallbackData =
+                                                                                  "finish_editing",
+                                                                          },
+                                                                  },
+                                                          }
+                                                  )
             );
         }
 

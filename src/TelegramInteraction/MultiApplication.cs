@@ -62,6 +62,8 @@ namespace TelegramInteraction
             container.ConfigureTelegramClient(applicationSettings);
 
             container.Register<ChatWorker>();
+            
+            container.Register<PollSender>();
 
             container.RegisterInstance(environment.Log);
 

@@ -3,20 +3,18 @@ using System.Threading.Tasks;
 
 using BusinessLogic.CreatePolls;
 
-using Telegram.Bot;
 using Telegram.Bot.Types;
-using Telegram.Bot.Types.ReplyMarkups;
 
 namespace TelegramInteraction.Chat
 {
     public class CreateNewPollCommand : IChatCommand
     {
-        private readonly ITelegramBotClient telegramBotClient;
+        private readonly PollSender pollSender;
         private readonly ICreatePollService createPollService;
 
-        public CreateNewPollCommand(ITelegramBotClient telegramBotClient, ICreatePollService createPollService)
+        public CreateNewPollCommand(PollSender pollSender, ICreatePollService createPollService)
         {
-            this.telegramBotClient = telegramBotClient;
+            this.pollSender = pollSender;
             this.createPollService = createPollService;
         }
 
@@ -35,48 +33,7 @@ namespace TelegramInteraction.Chat
                 };
             await createPollService.CreateAsync(createPollRequest);
 
-            await telegramBotClient.SendPollAsync(createPollRequest.ChatId,
-                                                  createPollRequest.PollName,
-                                                  createPollRequest.Options,
-                                                  isAnonymous: createPollRequest.IsAnonymous,
-                                                  replyMarkup: new InlineKeyboardMarkup(
-                                                      new[]
-                                                          {
-                                                              new[]
-                                                                  {
-                                                                      new InlineKeyboardButton
-                                                                          {
-                                                                              Text = "Name",
-                                                                              CallbackData = "change_name",
-                                                                          },
-                                                                      new InlineKeyboardButton
-                                                                          {
-                                                                              Text = "Anonymous",
-                                                                              CallbackData =
-                                                                                  "change_anonymous",
-                                                                          },
-                                                                  },
-                                                              new[]
-                                                                  {
-                                                                      new InlineKeyboardButton
-                                                                          {
-                                                                              Text = "Options",
-                                                                              CallbackData =
-                                                                                  "change_options",
-                                                                          },
-                                                                  },
-                                                              new[]
-                                                                  {
-                                                                      new InlineKeyboardButton
-                                                                          {
-                                                                              Text = "Finish",
-                                                                              CallbackData =
-                                                                                  "finish_editing",
-                                                                          },
-                                                                  },
-                                                          }
-                                                  )
-            );
+            await pollSender.SendPollAsync(createPollRequest);
         }
 
         public bool CanHandle(Update update) =>

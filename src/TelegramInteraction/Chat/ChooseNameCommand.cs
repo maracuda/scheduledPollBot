@@ -1,37 +1,36 @@
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 using BusinessLogic.CreatePolls;
 
-using Telegram.Bot;
 using Telegram.Bot.Types;
-using Telegram.Bot.Types.ReplyMarkups;
 
 namespace TelegramInteraction.Chat
 {
     public class ChooseNameCommand : IChatCommand
     {
-        private readonly ITelegramBotClient telegramBotClient;
         private readonly ICreatePollService createPollService;
+        private readonly PollSender pollSender;
 
-        public ChooseNameCommand(ITelegramBotClient telegramBotClient, ICreatePollService createPollService)
+        public ChooseNameCommand(ICreatePollService createPollService,
+                                 PollSender pollSender
+                                 )
         {
-            this.telegramBotClient = telegramBotClient;
             this.createPollService = createPollService;
+            this.pollSender = pollSender;
         }
 
         public async Task ExecuteAsync(Update update)
         {
-            var chatId = update.CallbackQuery.Message.Chat.Id;
-            var pendingRequest = await createPollService.FindPendingAsync(chatId, update.CallbackQuery.From.Id);
+            var chatId = update.Message.Chat.Id;
 
-            /*
-            var name = update.Message.Text;
-
-            pendingRequest.PollName = name;
-            await createPollService.SaveAsync(pendingRequest);*/
+            var pendingRequest = await createPollService.FindPendingAsync(chatId, update.Message.From.Id);
+            pendingRequest.PollName = update.Message.Text;
+            await createPollService.SaveAsync(pendingRequest);
+            
+            await pollSender.SendPollAsync(pendingRequest);
         }
 
         public bool CanHandle(Update update) =>
-            update.CallbackQuery != null && update.CallbackQuery.Data == CallbackConstants.NameCallback;
+            update.Message?.ReplyToMessage != null && update.Message.ReplyToMessage.Text == ChatConstants.GuessNameText;
     }
 }

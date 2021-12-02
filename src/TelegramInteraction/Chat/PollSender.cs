@@ -30,14 +30,14 @@ namespace TelegramInteraction.Chat
                                                                       new InlineKeyboardButton
                                                                           {
                                                                               Text = "Name",
-                                                                              CallbackData = CallbackConstants.NameCallback,
+                                                                              CallbackData = ChatConstants.NameCallback,
                                                                               SwitchInlineQueryCurrentChat = "test", 
                                                                               
                                                                           },
                                                                       new InlineKeyboardButton
                                                                           {
                                                                               Text = "Anonymous",
-                                                                              CallbackData = CallbackConstants.AnonymousCallback,
+                                                                              CallbackData = ChatConstants.AnonymousCallback,
                                                                           },
                                                                   },
                                                               new[]

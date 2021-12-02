@@ -27,7 +27,7 @@ namespace TelegramInteraction.Chat
         }
 
         public bool CanHandle(Update update) =>
-            update.CallbackQuery != null && update.CallbackQuery.Data == CallbackConstants.AnonymousCallback;
+            update.CallbackQuery != null && update.CallbackQuery.Data == ChatConstants.AnonymousCallback;
 
         private readonly ICreatePollService createPollService;
         private readonly PollSender pollSender;

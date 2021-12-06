@@ -31,8 +31,6 @@ namespace TelegramInteraction.Chat
                                                                           {
                                                                               Text = "Name",
                                                                               CallbackData = ChatConstants.NameCallback,
-                                                                              SwitchInlineQueryCurrentChat = "test", 
-                                                                              
                                                                           },
                                                                       new InlineKeyboardButton
                                                                           {
@@ -45,8 +43,7 @@ namespace TelegramInteraction.Chat
                                                                       new InlineKeyboardButton
                                                                           {
                                                                               Text = "Options",
-                                                                              CallbackData =
-                                                                                  "change_options",
+                                                                              CallbackData = ChatConstants.OptionsCallback,
                                                                           },
                                                                   },
                                                               new[]

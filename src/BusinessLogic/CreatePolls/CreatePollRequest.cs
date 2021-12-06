@@ -12,5 +12,6 @@ namespace BusinessLogic.CreatePolls
         public string PollName { get; set; }
         public bool IsAnonymous { get; set; }
         public string[] Options { get; set; }
+        public string Schedule { get; set; }
     }
 }

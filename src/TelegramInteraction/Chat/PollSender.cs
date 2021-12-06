@@ -45,6 +45,11 @@ namespace TelegramInteraction.Chat
                                                                               Text = "Options",
                                                                               CallbackData = ChatConstants.OptionsCallback,
                                                                           },
+                                                                      new InlineKeyboardButton
+                                                                          {
+                                                                              Text = $"Schedule {createPollRequest.Schedule}",
+                                                                              CallbackData = ChatConstants.ScheduleCallback,
+                                                                          },
                                                                   },
                                                               new[]
                                                                   {

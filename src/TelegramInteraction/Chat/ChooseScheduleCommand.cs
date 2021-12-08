@@ -34,15 +34,19 @@ namespace TelegramInteraction.Chat
             if(TryParseSchedule(scheduleText, out var schedule))
             {
                 pendingRequest.Schedule = schedule.ToString();
-
                 await createPollService.SaveAsync(pendingRequest);
-                
+
                 await telegramBotClient.SendTextMessageAsync(chatId,
-                                                             $"Next occurrence {schedule.GetNextOccurrence(DateTime.Now)} <b>UTC</b>",
-                                                             parseMode: ParseMode.Html
+                                                             $"Next occurrence {schedule.GetNextOccurrence(DateTime.Now)} **bold UTC**",
+                                                             parseMode: ParseMode.MarkdownV2
                 );
-                await pollSender.SendPollAsync(pendingRequest);
             }
+            else
+            {
+                await telegramBotClient.SendTextMessageAsync(chatId, $"Schedule is invalid, please correct it");
+            }
+
+            await pollSender.SendPollAsync(pendingRequest);
         }
 
         private static bool TryParseSchedule(string scheduleText, out CrontabSchedule schedule)

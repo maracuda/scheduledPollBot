@@ -9,7 +9,7 @@ namespace TelegramInteraction.Chat
 {
     public class PollSender
     {
-        private ITelegramBotClient telegramBotClient;
+        private readonly ITelegramBotClient telegramBotClient;
 
         public PollSender(ITelegramBotClient telegramBotClient)
         {
@@ -47,7 +47,7 @@ namespace TelegramInteraction.Chat
                                                                           },
                                                                       new InlineKeyboardButton
                                                                           {
-                                                                              Text = $"Schedule {createPollRequest.Schedule}",
+                                                                              Text = "Schedule",
                                                                               CallbackData = ChatConstants.ScheduleCallback,
                                                                           },
                                                                   },

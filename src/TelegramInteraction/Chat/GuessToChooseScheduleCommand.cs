@@ -2,6 +2,7 @@
 
 using Telegram.Bot;
 using Telegram.Bot.Types;
+using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.ReplyMarkups;
 
 namespace TelegramInteraction.Chat
@@ -19,7 +20,8 @@ namespace TelegramInteraction.Chat
         {
             var chatId = update.CallbackQuery.Message.Chat.Id;
 
-            await telegramBotClient.SendTextMessageAsync(chatId, ChatConstants.GuessScheduleText, replyMarkup:new ForceReplyMarkup());
+            await telegramBotClient.SendTextMessageAsync(chatId, ChatConstants.GuessScheduleText + " in [cron](https://crontab.guru/) format", replyMarkup:new ForceReplyMarkup(),
+                parseMode: ParseMode.MarkdownV2);
         }
 
         public bool CanHandle(Update update) =>

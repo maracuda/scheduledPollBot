@@ -1,24 +1,26 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 
 using BusinessLogic.CreatePolls;
 
 using NCrontab;
 
+using Telegram.Bot;
 using Telegram.Bot.Types;
+using Telegram.Bot.Types.Enums;
 
 namespace TelegramInteraction.Chat
 {
     public class ChooseScheduleCommand : IChatCommand
     {
-        private readonly ICreatePollService createPollService;
-        private readonly PollSender pollSender;
-
         public ChooseScheduleCommand(ICreatePollService createPollService,
-                                     PollSender pollSender
+                                     PollSender pollSender,
+                                     ITelegramBotClient telegramBotClient
         )
         {
             this.createPollService = createPollService;
             this.pollSender = pollSender;
+            this.telegramBotClient = telegramBotClient;
         }
 
         public async Task ExecuteAsync(Update update)
@@ -34,6 +36,11 @@ namespace TelegramInteraction.Chat
                 pendingRequest.Schedule = schedule.ToString();
 
                 await createPollService.SaveAsync(pendingRequest);
+                
+                await telegramBotClient.SendTextMessageAsync(chatId,
+                                                             $"Next occurrence {schedule.GetNextOccurrence(DateTime.Now)} <b>UTC</b>",
+                                                             parseMode: ParseMode.Html
+                );
                 await pollSender.SendPollAsync(pendingRequest);
             }
         }
@@ -54,6 +61,10 @@ namespace TelegramInteraction.Chat
 
         public bool CanHandle(Update update) =>
             update.Message?.ReplyToMessage != null
-            && update.Message.ReplyToMessage.Text == ChatConstants.GuessScheduleText;
+            && update.Message.ReplyToMessage.Text.StartsWith(ChatConstants.GuessScheduleText);
+
+        private readonly ITelegramBotClient telegramBotClient;
+        private readonly ICreatePollService createPollService;
+        private readonly PollSender pollSender;
     }
 }

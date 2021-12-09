@@ -22,7 +22,7 @@ namespace TelegramInteraction.Chat
         {
             var createPollRequest = new CreatePollRequest
                 {
-                    Options = new[] { "First option", "Second option", },
+                    Options = new[] { DefaultPollConstants.FirstOption, DefaultPollConstants.SecondOption, },
                     IsAnonymous = true,
                     PollName = "Choose poll name",
                     UserId = update.Message.From.Id,

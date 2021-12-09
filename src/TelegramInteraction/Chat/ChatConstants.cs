@@ -9,5 +9,6 @@ namespace TelegramInteraction.Chat
         public static string GuessOptionsText => "Send me options, one each line";
         public static string ScheduleCallback => "change_schedule";
         public static string GuessScheduleText => "Send me a schedule";
+        public static string PublishCallback => "publish";
     }
 }

@@ -55,9 +55,8 @@ namespace TelegramInteraction.Chat
                                                                   {
                                                                       new InlineKeyboardButton
                                                                           {
-                                                                              Text = "Finish",
-                                                                              CallbackData =
-                                                                                  "finish_editing",
+                                                                              Text = "Publish",
+                                                                              CallbackData = ChatConstants.PublishCallback,
                                                                           },
                                                                   },
                                                           }

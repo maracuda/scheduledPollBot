@@ -62,7 +62,7 @@ namespace TelegramInteraction
             container.ConfigureTelegramClient(applicationSettings);
 
             container.Register<ChatWorker>();
-            
+            container.Register<IPublishRequestValidator, PublishRequestValidator>();
             container.Register<PollSender>();
 
             container.RegisterInstance(environment.Log);

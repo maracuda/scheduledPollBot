@@ -24,7 +24,7 @@ namespace TelegramInteraction.Chat
                 {
                     Options = new[] { DefaultPollConstants.FirstOption, DefaultPollConstants.SecondOption, },
                     IsAnonymous = true,
-                    PollName = "Choose poll name",
+                    PollName = DefaultPollConstants.Name,
                     UserId = update.Message.From.Id,
                     ChatId = update.Message.Chat.Id,
                     CreateAt = DateTime.Now,

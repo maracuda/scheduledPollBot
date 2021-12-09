@@ -36,9 +36,10 @@ namespace TelegramInteraction.Chat
                 pendingRequest.Schedule = schedule.ToString();
                 await createPollService.SaveAsync(pendingRequest);
 
+                var dateTimeString = schedule.GetNextOccurrence(DateTime.Now).ToString().Replace(".", "\\.");
                 await telegramBotClient.SendTextMessageAsync(chatId,
-                                                             $"Next occurrence {schedule.GetNextOccurrence(DateTime.Now)} **bold UTC**",
-                                                             parseMode: ParseMode.MarkdownV2
+                                                             $"Next occurrence {dateTimeString} <b>UTC</b>",
+                                                             parseMode: ParseMode.Html
                 );
             }
             else

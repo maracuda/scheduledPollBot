@@ -4,6 +4,6 @@ namespace TelegramInteraction.Chat
 {
     public interface IPublishRequestValidator
     {
-        Result<string> Validate(CreatePollRequest pendingRequest);
+        Result<string> Validate(CreatePollRequest poll);
     }
 }

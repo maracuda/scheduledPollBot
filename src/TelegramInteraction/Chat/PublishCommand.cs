@@ -4,8 +4,6 @@ using BusinessLogic.CreatePolls;
 
 using Telegram.Bot;
 using Telegram.Bot.Types;
-using Telegram.Bot.Types.Enums;
-using Telegram.Bot.Types.ReplyMarkups;
 
 namespace TelegramInteraction.Chat
 {
@@ -36,8 +34,8 @@ namespace TelegramInteraction.Chat
             var validationResult = publishRequestValidator.Validate(pendingRequest);
             if(validationResult.IsSuccess)
             {
-                await telegramBotClient.SendTextMessageAsync(chatId, ChatConstants.GuessScheduleText + " in [cron](https://crontab.guru/) format", replyMarkup:new ForceReplyMarkup(),
-                                                             parseMode: ParseMode.MarkdownV2);
+                // заменшионить бота в чате с id опроса, который создали
+                await telegramBotClient.SendTextMessageAsync(chatId, "Invite me in chat");
                 return;
             }
             

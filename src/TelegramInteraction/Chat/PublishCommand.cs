@@ -34,8 +34,9 @@ namespace TelegramInteraction.Chat
             var validationResult = publishRequestValidator.Validate(pendingRequest);
             if(validationResult.IsSuccess)
             {
-                // заменшионить бота в чате с id опроса, который создали
-                await telegramBotClient.SendTextMessageAsync(chatId, "Invite me in chat");
+                var bot = await telegramBotClient.GetMeAsync();
+                
+                await telegramBotClient.SendTextMessageAsync(chatId, $"Well done\r\nCall me @{bot.Username} in chat where you want to post the poll");
                 return;
             }
             

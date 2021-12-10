@@ -7,14 +7,14 @@ using Telegram.Bot.Types;
 
 namespace TelegramInteraction.Chat
 {
-    public class PublishCommand : IChatCommand
+    public class GuessToPublishCommand : IChatCommand
     {
         private readonly ITelegramBotClient telegramBotClient;
         private readonly ICreatePollService createPollService;
         private readonly IPublishRequestValidator publishRequestValidator;
         private readonly PollSender pollSender;
 
-        public PublishCommand(ITelegramBotClient telegramBotClient,
+        public GuessToPublishCommand(ITelegramBotClient telegramBotClient,
                               ICreatePollService createPollService,
                               IPublishRequestValidator publishRequestValidator,
                               PollSender pollSender

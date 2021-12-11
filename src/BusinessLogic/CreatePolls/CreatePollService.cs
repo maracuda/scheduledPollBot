@@ -47,5 +47,10 @@ namespace BusinessLogic.CreatePolls
             createPollRequests[pendingRequest.Id] = pendingRequest;
             return Task.CompletedTask;
         }
+
+        public Task<CreatePollRequest> FindPendingAsync(int fromId)
+        {
+            return Task.FromResult(createPollRequests.Values.FirstOrDefault(v => v.UserId == fromId));
+        }
     }
 }

@@ -1,11 +1,17 @@
 ﻿using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
-using BusinessLogic;
+using FluentAssertions.Extensions;
+
+using NCrontab;
 
 using SimpleInjector;
 
 using Telegram.Bot;
+
+using TelegramInteraction.Chat;
 
 using Vostok.Applications.Scheduled;
 using Vostok.Hosting.Abstractions;
@@ -14,41 +20,60 @@ namespace TelegramInteraction
 {
     public class ScheduledApplication : VostokScheduledAsyncApplication
     {
+        private ConcurrentDictionary<Guid, bool> sendPollTasks;
+
         protected override async Task SetupAsync(IScheduledActionsBuilder builder, IVostokHostingEnvironment environment
         )
         {
+            sendPollTasks = new ConcurrentDictionary<Guid, bool>();
             var container = environment.HostExtensions.Get<Container>();
             
             var telegramBotClient = container.GetInstance<ITelegramBotClient>();
-            var sportGroupRepository = container.GetInstance<ISportGroupRepository>();
-            
-            var groups = await sportGroupRepository.ReadAllAsync();
-            foreach(var sportGroup in groups)
+            var scheduledPollService = container.GetInstance<IScheduledPollService>();
+
+            builder.Schedule("one time scheduler",
+                             Scheduler.Periodical(30.Seconds()),
+                             context => ScheduleTask(scheduledPollService, telegramBotClient, context)
+            );
+        }
+
+        private async Task ScheduleTask(IScheduledPollService scheduledPollService, ITelegramBotClient telegramBotClient,
+                                        IScheduledActionContext context
+        )
+        {
+            var allPolls = await scheduledPollService.ReadAllAsync();
+
+            foreach(var scheduledPoll in allPolls)
             {
-                builder.Schedule(sportGroup.Name,
-                                 Scheduler.Crontab(sportGroup.NotificationSchedule),
-                                 context => SendPollAsync(sportGroup, telegramBotClient, context)
-                );
+                if(sendPollTasks.ContainsKey(scheduledPoll.Id))
+                {
+                    return;
+                }
+                else
+                {
+                    sendPollTasks[scheduledPoll.Id] = true;
+                    await SendPollAsync(telegramBotClient, context, scheduledPoll, sendPollTasks);
+                }
             }
         }
 
-        private static Task SendPollAsync(SportGroup sportGroup, ITelegramBotClient telegramBotClient,
-                                          IScheduledActionContext context
+        private static async Task SendPollAsync(ITelegramBotClient telegramBotClient,
+                                                IScheduledActionContext context, ScheduledPoll scheduledPoll,
+                                                ConcurrentDictionary<Guid, bool> sendPollTasks
         )
         {
-            var trainingTime = Scheduler.Crontab(sportGroup.TrainingSchedule).ScheduleNext(DateTimeOffset.Now);
-            if(!trainingTime.HasValue)
-            {
-                throw new Exception("Can't define training time");
-            }
 
-            return telegramBotClient.SendPollAsync(sportGroup.TelegramChatId,
-                                                   $"{sportGroup.Title} {trainingTime.Value.Date:dd.MM}",
-                                                   sportGroup.PollOptions,
-                                                   isAnonymous: false,
-                                                   cancellationToken: context.CancellationToken
+            var nextOccurrence = CrontabSchedule.Parse(scheduledPoll.Schedule).GetNextOccurrence(DateTime.Now);
+            await Task.Delay(nextOccurrence - DateTime.Now);
+
+            await telegramBotClient.SendPollAsync(scheduledPoll.ChatId,
+                                                  scheduledPoll.Name,
+                                                  scheduledPoll.Options,
+                                                  isAnonymous: scheduledPoll.IsAnonymous,
+                                                  cancellationToken: context.CancellationToken
             );
-            return Task.CompletedTask;
+            
+            sendPollTasks.Remove(scheduledPoll.Id, out _);
         }
     }
 }

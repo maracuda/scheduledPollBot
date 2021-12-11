@@ -29,7 +29,7 @@ namespace TelegramInteraction
         public MultiApplication()
             : base(builder => builder
                               .AddAspNetCore(SetupAspNetCore)
-                              // .AddApplication(new ScheduledApplication())
+                              .AddApplication(new ScheduledApplication())
                               .AddApplication(new ChatApplication())
                               .AddScheduled(SetupPinger)
                               .UseParallelInitialization()
@@ -64,6 +64,8 @@ namespace TelegramInteraction
             container.Register<ChatWorker>();
             container.Register<IPublishRequestValidator, PublishRequestValidator>();
             container.Register<PollSender>();
+            
+            container.Register<IScheduledPollService, ScheduledPollService>();
 
             container.RegisterInstance(environment.Log);
 

@@ -35,7 +35,12 @@ namespace TelegramInteraction.Chat
                 await scheduledPollService.SaveAsync(activePoll);
 
                 await telegramBotClient.SendTextMessageAsync(update.Message.Chat.Id, $"Poll *{activePoll.Name}* was stopped"
-                                                                 + $"\r\n To start polling again create a new one by /new");
+                                                                 + "\r\n To start polling again create a poll by /new command",
+                    ParseMode.MarkdownV2);
+            }
+            else
+            {
+                await telegramBotClient.SendTextMessageAsync(update.Message.Chat.Id, "I can't find any active poll here");
             }
         }
 

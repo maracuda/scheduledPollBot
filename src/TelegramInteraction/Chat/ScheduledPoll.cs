@@ -1,7 +1,5 @@
 using System;
 
-using Telegram.Bot.Types;
-
 namespace TelegramInteraction.Chat
 {
     public class ScheduledPoll
@@ -12,6 +10,7 @@ namespace TelegramInteraction.Chat
         public bool IsAnonymous { get; set; }
         public string Name { get; set; }
         public string Schedule { get; set; }
-        public ChatId ChatId { get; set; }
+        public long ChatId { get; set; }
+        public bool IsDisabled { get; set; }
     }
 }

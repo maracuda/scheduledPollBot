@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 using FluentAssertions.Extensions;
@@ -41,7 +42,8 @@ namespace TelegramInteraction
                                         IScheduledActionContext context
         )
         {
-            var allPolls = await scheduledPollService.ReadAllAsync();
+            var allPolls = (await scheduledPollService.ReadAllAsync())
+                .Where(p => !p.IsDisabled);
 
             foreach(var scheduledPoll in allPolls)
             {

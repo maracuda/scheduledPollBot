@@ -47,7 +47,7 @@ namespace TelegramInteraction.Chat
                                                 .Select(dt => dt.ToString().Replace(".", "\\.")));
 
                 await telegramBotClient.SendTextMessageAsync(chatId,
-                                                             $"Ok, schedule set up\r\nCheck schedule for next 3 times, TimeZone is UTC:\r\n{next3StartTimes}",
+                                                             $"Ok, schedule set up\r\nCheck schedule for next 3 times, TimeZone is *UTC*:\r\n{next3StartTimes}",
                                                              parseMode: ParseMode.MarkdownV2
                 );
             }

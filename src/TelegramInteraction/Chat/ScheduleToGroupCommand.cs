@@ -62,7 +62,7 @@ namespace TelegramInteraction.Chat
                                                 .ToString()
                                                 .Replace(".", "\\.");
             await telegramBotClient.SendTextMessageAsync(update.Message.Chat.Id,
-                                                         $"Ok, I will publish poll **{pendingRequest.PollName}**"
+                                                         $"Ok, I will publish poll *{pendingRequest.PollName}*"
                                                          + $" at {nextOccurrence} next time",
                                                          ParseMode.MarkdownV2
             );

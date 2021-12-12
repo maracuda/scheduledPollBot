@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 
 using SimpleInjector;
 
@@ -8,7 +9,6 @@ namespace TelegramInteraction.Chat
 {
     public class ChatApplication : IVostokApplication
     {
-
         public Task InitializeAsync(IVostokHostingEnvironment environment)
         {
             return Task.CompletedTask;
@@ -17,7 +17,22 @@ namespace TelegramInteraction.Chat
         public Task RunAsync(IVostokHostingEnvironment environment)
         {
             var container = environment.HostExtensions.Get<Container>();
-            return container.GetInstance<ChatWorker>().DoWorkAsync(environment.ShutdownToken);
+            var chatWorker = container.GetInstance<ChatWorker>();
+            var logger = container.GetInstance<ITelegramLogger>();
+            
+            return DoWorkAsync(environment, chatWorker, logger);
+        }
+
+        private static async Task DoWorkAsync(IVostokHostingEnvironment environment, ChatWorker chatWorker, ITelegramLogger logger)
+        {
+            try
+            {
+                await chatWorker.DoWorkAsync(environment.ShutdownToken);
+            }
+            catch(Exception exception)
+            {
+                logger.Log(exception);
+            }
         }
     }
 }

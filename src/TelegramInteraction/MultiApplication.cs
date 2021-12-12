@@ -63,6 +63,7 @@ namespace TelegramInteraction
 
             container.Register<ChatWorker>();
             container.Register<IPublishRequestValidator, PublishRequestValidator>();
+            container.Register<ITelegramLogger, TelegramLogger>();
             container.Register<PollSender>();
             
             container.Register<IScheduledPollService, ScheduledPollService>();

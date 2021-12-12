@@ -1,9 +1,8 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 
 using Telegram.Bot;
 using Telegram.Bot.Types;
-
-using Vostok.Logging.Abstractions;
 
 namespace TelegramInteraction.Chat
 {
@@ -11,23 +10,25 @@ namespace TelegramInteraction.Chat
     {
         public FeedbackCommand(
             ITelegramBotClient telegramBotClient,
-            ILog log
+            ITelegramLogger telegramLogger
         )
         {
             this.telegramBotClient = telegramBotClient;
-            this.log = log;
+            this.telegramLogger = telegramLogger;
         }
 
         public async Task ExecuteAsync(Update update)
         {
-            log.Error("Feedback from @{from}\r\n{text}", update.Message.From.Username, update.Message.Text);
+            telegramLogger.Log(new Exception($"Feedback from @{update.Message.From.Username}\r\n{update.Message.Text}")
+                );
             await telegramBotClient.SendTextMessageAsync(update.Message.Chat.Id, "Thank you! Have a nice day 😉");
         }
 
         public bool CanHandle(Update update) =>
-            update.Message?.ReplyToMessage != null && update.Message.ReplyToMessage.Text == ChatConstants.FeedbackMessage;
+            update.Message?.ReplyToMessage != null
+            && update.Message.ReplyToMessage.Text == ChatConstants.FeedbackMessage;
 
         private readonly ITelegramBotClient telegramBotClient;
-        private readonly ILog log;
+        private readonly ITelegramLogger telegramLogger;
     }
 }

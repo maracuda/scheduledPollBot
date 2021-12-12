@@ -41,7 +41,9 @@ namespace TelegramInteraction.Chat
                 pendingRequest.IsValid = true;
                 var bot = await telegramBotClient.GetMeAsync();
                 
-                await telegramBotClient.SendTextMessageAsync(chatId, $"Well done\r\nCall me @{bot.Username} in chat where you want to post the poll");
+                await telegramBotClient.SendTextMessageAsync(chatId, $"Well done\r\nCall me @{bot.Username} "
+                                                                     + "in chat where you want to post the poll"
+                                                                     + " and type /schedule command");
                 return;
             }
             

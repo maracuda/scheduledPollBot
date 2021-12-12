@@ -11,13 +11,9 @@ using Telegram.Bot.Types.Enums;
 
 namespace TelegramInteraction.Chat
 {
-    public class AddPollToChatCommand : IChatCommand
+    public class ScheduleToGroupCommand : IChatCommand
     {
-        private readonly ICreatePollService createPollService;
-        private readonly ITelegramBotClient telegramBotClient;
-        private readonly IScheduledPollService scheduledPollService;
-
-        public AddPollToChatCommand(ICreatePollService createPollService,
+        public ScheduleToGroupCommand(ICreatePollService createPollService,
                                     ITelegramBotClient telegramBotClient, IScheduledPollService scheduledPollService
         )
         {
@@ -28,12 +24,20 @@ namespace TelegramInteraction.Chat
 
         public async Task ExecuteAsync(Update update)
         {
+            if(update.Message.Chat.Type == ChatType.Private)
+            {
+                await telegramBotClient.SendTextMessageAsync(update.Message.Chat.Id,
+                                                       "This command available only in group"
+                );
+                return;
+            }
+            
             var pendingRequest = await createPollService.FindPendingAndValidAsync(update.Message.From.Id);
             if(pendingRequest == null)
             {
                 await telegramBotClient.SendTextMessageAsync(update.Message.Chat.Id,
-                                                       $"Sorry, there is no pending valid poll request, that i can add to this chat."
-                                                       + $"\r\n Create new one with /new command in private chat with me"
+                                                             $"Sorry, there is no pending valid poll request, that i can add to this chat."
+                                                             + $"\r\n Create new one with /new command in private chat with me"
                 );
                 return;
             }
@@ -49,20 +53,27 @@ namespace TelegramInteraction.Chat
                         ChatId = update.Message.Chat.Id,
                     }
             );
-            
+
             pendingRequest.IsPending = false;
             await createPollService.SaveAsync(pendingRequest);
-            
-            var nextOccurrence = CrontabSchedule.Parse(pendingRequest.Schedule).GetNextOccurrence(DateTime.Now)
-                                                .ToString().Replace(".", "\\.");
+
+            var nextOccurrence = CrontabSchedule.Parse(pendingRequest.Schedule)
+                                                .GetNextOccurrence(DateTime.Now)
+                                                .ToString()
+                                                .Replace(".", "\\.");
             await telegramBotClient.SendTextMessageAsync(update.Message.Chat.Id,
                                                          $"Ok, I will publish poll **{pendingRequest.PollName}**"
                                                          + $" at {nextOccurrence} next time",
-                ParseMode.MarkdownV2
+                                                         ParseMode.MarkdownV2
             );
         }
 
         public bool CanHandle(Update update) =>
-            update.Message != null && update.Message.Text.Contains("/addToChat");
+            update.Message != null
+            && update.Message.Text.Contains("/schedule");
+
+        private readonly ICreatePollService createPollService;
+        private readonly ITelegramBotClient telegramBotClient;
+        private readonly IScheduledPollService scheduledPollService;
     }
 }

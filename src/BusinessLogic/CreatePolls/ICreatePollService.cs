@@ -9,6 +9,6 @@ namespace BusinessLogic.CreatePolls
         Task<Guid> CreateAsync(long chatId, int userId);
         Task<CreatePollRequest> FindPendingAsync(long chatId, int userId);
         Task SaveAsync(CreatePollRequest pendingRequest);
-        Task<CreatePollRequest> FindPendingAsync(int fromId);
+        Task<CreatePollRequest> FindPendingAndValidAsync(int fromId);
     }
 }

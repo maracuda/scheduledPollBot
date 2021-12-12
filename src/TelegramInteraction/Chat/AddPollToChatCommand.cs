@@ -7,6 +7,7 @@ using NCrontab;
 
 using Telegram.Bot;
 using Telegram.Bot.Types;
+using Telegram.Bot.Types.Enums;
 
 namespace TelegramInteraction.Chat
 {
@@ -14,7 +15,7 @@ namespace TelegramInteraction.Chat
     {
         private readonly ICreatePollService createPollService;
         private readonly ITelegramBotClient telegramBotClient;
-        private IScheduledPollService scheduledPollService;
+        private readonly IScheduledPollService scheduledPollService;
 
         public AddPollToChatCommand(ICreatePollService createPollService,
                                     ITelegramBotClient telegramBotClient, IScheduledPollService scheduledPollService
@@ -27,7 +28,15 @@ namespace TelegramInteraction.Chat
 
         public async Task ExecuteAsync(Update update)
         {
-            var pendingRequest = await createPollService.FindPendingAsync(update.Message.From.Id);
+            var pendingRequest = await createPollService.FindPendingAndValidAsync(update.Message.From.Id);
+            if(pendingRequest == null)
+            {
+                await telegramBotClient.SendTextMessageAsync(update.Message.Chat.Id,
+                                                       $"Sorry, there is no pending valid poll request, that i can add to this chat."
+                                                       + $"\r\n Create new one with /new command in private chat with me"
+                );
+                return;
+            }
 
             await scheduledPollService.CreateAsync(new ScheduledPoll
                     {
@@ -40,15 +49,17 @@ namespace TelegramInteraction.Chat
                         ChatId = update.Message.Chat.Id,
                     }
             );
+            
             pendingRequest.IsPending = false;
             await createPollService.SaveAsync(pendingRequest);
             
-            var nextOccurrence = CrontabSchedule.Parse(pendingRequest.Schedule).GetNextOccurrence(DateTime.Now);
+            var nextOccurrence = CrontabSchedule.Parse(pendingRequest.Schedule).GetNextOccurrence(DateTime.Now)
+                                                .ToString().Replace(".", "\\.");
             await telegramBotClient.SendTextMessageAsync(update.Message.Chat.Id,
-                                                         $"Ok, I will publish poll {pendingRequest.PollName}"
-                                                         + $" at {nextOccurrence} next time"
+                                                         $"Ok, I will publish poll **{pendingRequest.PollName}**"
+                                                         + $" at {nextOccurrence} next time",
+                ParseMode.MarkdownV2
             );
-            
         }
 
         public bool CanHandle(Update update) =>

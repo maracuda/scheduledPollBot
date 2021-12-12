@@ -24,7 +24,11 @@ namespace BusinessLogic.CreatePolls
         {
             var createPollRequest = new CreatePollRequest
                 {
-                    Id = Guid.NewGuid(), ChatId = chatId, UserId = userId, CreateAt = DateTime.Now, IsPending = true,
+                    Id = Guid.NewGuid(),
+                    ChatId = chatId,
+                    UserId = userId,
+                    CreateAt = DateTime.Now,
+                    IsPending = true,
                 };
 
             createPollRequests.Add(createPollRequest.Id, createPollRequest);
@@ -48,9 +52,14 @@ namespace BusinessLogic.CreatePolls
             return Task.CompletedTask;
         }
 
-        public Task<CreatePollRequest> FindPendingAsync(int fromId)
+        public Task<CreatePollRequest> FindPendingAndValidAsync(int fromId)
         {
-            return Task.FromResult(createPollRequests.Values.FirstOrDefault(v => v.UserId == fromId));
+            return Task.FromResult(createPollRequests.Values.FirstOrDefault(v =>
+                                                                                v.UserId == fromId
+                                                                                && v.IsPending
+                                                                                && v.IsValid
+                                   )
+            );
         }
     }
 }

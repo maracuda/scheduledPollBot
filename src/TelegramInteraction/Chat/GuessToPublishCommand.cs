@@ -38,6 +38,7 @@ namespace TelegramInteraction.Chat
             var validationResult = publishRequestValidator.Validate(pendingRequest);
             if(validationResult.IsSuccess)
             {
+                pendingRequest.IsValid = true;
                 var bot = await telegramBotClient.GetMeAsync();
                 
                 await telegramBotClient.SendTextMessageAsync(chatId, $"Well done\r\nCall me @{bot.Username} in chat where you want to post the poll");

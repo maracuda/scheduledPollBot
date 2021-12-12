@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 using BusinessLogic.CreatePolls;
@@ -40,18 +42,31 @@ namespace TelegramInteraction.Chat
                 pendingRequest.Schedule = schedule.ToString();
                 await createPollService.SaveAsync(pendingRequest);
 
-                var dateTimeString = schedule.GetNextOccurrence(DateTime.Now).ToString().Replace(".", "\\.");
+                var next3StartTimes = string.Join("\r\n", GetSchedules(DateTime.Now, schedule)
+                                                .Take(3)
+                                                .Select(dt => dt.ToString().Replace(".", "\\.")));
+
                 await telegramBotClient.SendTextMessageAsync(chatId,
-                                                             $"Next occurrence {dateTimeString} <b>UTC</b>",
-                                                             parseMode: ParseMode.Html
+                                                             $"Ok, schedule set up\r\nCheck schedule for next 3 times, TimeZone is UTC:\r\n{next3StartTimes}",
+                                                             parseMode: ParseMode.MarkdownV2
                 );
             }
             else
             {
                 await telegramBotClient.SendTextMessageAsync(chatId, $"Schedule is invalid, please correct it");
             }
-
+            
             await pollSender.SendPollAsync(pendingRequest);
+        }
+        
+        private IEnumerable<DateTime> GetSchedules(DateTime start, CrontabSchedule schedule)
+        {
+            var nextOccurrence = schedule.GetNextOccurrence(start);
+            while(true)
+            {
+                yield return nextOccurrence;
+                nextOccurrence = schedule.GetNextOccurrence(nextOccurrence);
+            }
         }
 
         private static bool TryParseSchedule(string scheduleText, out CrontabSchedule schedule)

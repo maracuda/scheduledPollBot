@@ -30,6 +30,7 @@ namespace TelegramInteraction.Chat
                     CreateAt = DateTime.Now,
                     IsPending = true,
                     Id = Guid.NewGuid(),
+                    IsValid = false,
                 };
             await createPollService.CreateAsync(createPollRequest);
 

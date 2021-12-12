@@ -2,6 +2,7 @@
 
 using BusinessLogic.CreatePolls;
 
+using Telegram.Bot;
 using Telegram.Bot.Types;
 
 namespace TelegramInteraction.Chat
@@ -10,13 +11,16 @@ namespace TelegramInteraction.Chat
     {
         private readonly ICreatePollService createPollService;
         private readonly PollSender pollSender;
+        private ITelegramBotClient telegramBotClient;
 
         public ChooseNameCommand(ICreatePollService createPollService,
-                                 PollSender pollSender
-                                 )
+                                 PollSender pollSender,
+                                 ITelegramBotClient telegramBotClient
+        )
         {
             this.createPollService = createPollService;
             this.pollSender = pollSender;
+            this.telegramBotClient = telegramBotClient;
         }
 
         public async Task ExecuteAsync(Update update)
@@ -24,6 +28,12 @@ namespace TelegramInteraction.Chat
             var chatId = update.Message.Chat.Id;
 
             var pendingRequest = await createPollService.FindPendingAsync(chatId, update.Message.From.Id);
+            if(pendingRequest == null)
+            {
+                await telegramBotClient.SendTextMessageAsync(chatId, $"Sorry, there is no poll from you, to create one use /new");
+                return;
+            }
+            
             pendingRequest.PollName = update.Message.Text;
             await createPollService.SaveAsync(pendingRequest);
             

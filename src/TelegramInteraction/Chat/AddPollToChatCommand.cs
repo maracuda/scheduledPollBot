@@ -40,6 +40,8 @@ namespace TelegramInteraction.Chat
                         ChatId = update.Message.Chat.Id,
                     }
             );
+            pendingRequest.IsPending = false;
+            await createPollService.SaveAsync(pendingRequest);
             
             var nextOccurrence = CrontabSchedule.Parse(pendingRequest.Schedule).GetNextOccurrence(DateTime.Now);
             await telegramBotClient.SendTextMessageAsync(update.Message.Chat.Id,

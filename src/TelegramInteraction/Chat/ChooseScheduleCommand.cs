@@ -27,7 +27,11 @@ namespace TelegramInteraction.Chat
         {
             var chatId = update.Message.Chat.Id;
 
-            var pendingRequest = await createPollService.FindPendingAsync(chatId, update.Message.From.Id);
+            var pendingRequest = await createPollService.FindPendingAsync(chatId, update.Message.From.Id); if(pendingRequest == null)
+            {
+                await telegramBotClient.SendTextMessageAsync(chatId, $"Sorry, there is no poll from you, to create one use /new");
+                return;
+            }
 
             var scheduleText = update.Message.Text;
 

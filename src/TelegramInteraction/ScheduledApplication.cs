@@ -21,19 +21,19 @@ namespace TelegramInteraction
 {
     public class ScheduledApplication : VostokScheduledAsyncApplication
     {
-        private ConcurrentDictionary<Guid, bool> sendPollTasks;
+        private ConcurrentDictionary<Guid, Task> sendPollTasks;
 
         protected override async Task SetupAsync(IScheduledActionsBuilder builder, IVostokHostingEnvironment environment
         )
         {
-            sendPollTasks = new ConcurrentDictionary<Guid, bool>();
+            sendPollTasks = new ConcurrentDictionary<Guid, Task>();
             var container = environment.HostExtensions.Get<Container>();
             
             var telegramBotClient = container.GetInstance<ITelegramBotClient>();
             var scheduledPollService = container.GetInstance<IScheduledPollService>();
 
             builder.Schedule("one time scheduler",
-                             Scheduler.Periodical(30.Seconds()),
+                             Scheduler.Periodical(2.Seconds()),
                              context => ScheduleTask(scheduledPollService, telegramBotClient, context)
             );
         }
@@ -49,31 +49,30 @@ namespace TelegramInteraction
             {
                 if(sendPollTasks.ContainsKey(scheduledPoll.Id))
                 {
-                    return;
+                    continue;
                 }
-                else
-                {
-                    sendPollTasks[scheduledPoll.Id] = true;
-                    await SendPollAsync(telegramBotClient, context, scheduledPoll, sendPollTasks);
-                }
+
+                sendPollTasks[scheduledPoll.Id] = SendPollAsync(telegramBotClient, context, scheduledPoll);
             }
         }
 
-        private static async Task SendPollAsync(ITelegramBotClient telegramBotClient,
-                                                IScheduledActionContext context, ScheduledPoll scheduledPoll,
-                                                ConcurrentDictionary<Guid, bool> sendPollTasks
+        private async Task SendPollAsync(ITelegramBotClient telegramBotClient,
+                                                IScheduledActionContext context, ScheduledPoll scheduledPoll
         )
         {
 
             var nextOccurrence = CrontabSchedule.Parse(scheduledPoll.Schedule).GetNextOccurrence(DateTime.Now);
             await Task.Delay(nextOccurrence - DateTime.Now);
-
-            await telegramBotClient.SendPollAsync(scheduledPoll.ChatId,
-                                                  scheduledPoll.Name,
-                                                  scheduledPoll.Options,
-                                                  isAnonymous: scheduledPoll.IsAnonymous,
-                                                  cancellationToken: context.CancellationToken
-            );
+            
+            if(sendPollTasks.ContainsKey(scheduledPoll.Id))
+            {
+                await telegramBotClient.SendPollAsync(scheduledPoll.ChatId,
+                                                      scheduledPoll.Name,
+                                                      scheduledPoll.Options,
+                                                      isAnonymous: scheduledPoll.IsAnonymous,
+                                                      cancellationToken: context.CancellationToken
+                );
+            }
             
             sendPollTasks.Remove(scheduledPoll.Id, out _);
         }

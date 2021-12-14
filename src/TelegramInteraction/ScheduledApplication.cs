@@ -16,6 +16,7 @@ using TelegramInteraction.Chat;
 
 using Vostok.Applications.Scheduled;
 using Vostok.Hosting.Abstractions;
+using Vostok.Logging.Abstractions;
 
 namespace TelegramInteraction
 {
@@ -31,37 +32,49 @@ namespace TelegramInteraction
             
             var telegramBotClient = container.GetInstance<ITelegramBotClient>();
             var scheduledPollService = container.GetInstance<IScheduledPollService>();
+            var log = container.GetInstance<ILog>();
 
-            builder.Schedule("one time scheduler",
+            builder.Schedule("Poll sending scheduler",
                              Scheduler.Periodical(2.Seconds()),
-                             context => ScheduleTask(scheduledPollService, telegramBotClient, context)
+                             context => ScheduleTasks(scheduledPollService, telegramBotClient, context, log)
             );
         }
 
-        private async Task ScheduleTask(IScheduledPollService scheduledPollService, ITelegramBotClient telegramBotClient,
-                                        IScheduledActionContext context
+        private async Task ScheduleTasks(IScheduledPollService scheduledPollService,
+                                         ITelegramBotClient telegramBotClient,
+                                         IScheduledActionContext context, ILog log
         )
         {
-            var allPolls = (await scheduledPollService.ReadAllAsync())
-                .Where(p => !p.IsDisabled);
+            var enabledPolls = (await scheduledPollService.ReadAllAsync())
+                .Where(p => !p.IsDisabled)
+                .ToArray();
 
-            foreach(var scheduledPoll in allPolls)
+            foreach(var scheduledPoll in enabledPolls)
             {
                 if(sendPollTasks.ContainsKey(scheduledPoll.Id))
                 {
                     continue;
                 }
 
-                sendPollTasks[scheduledPoll.Id] = SendPollAsync(telegramBotClient, context, scheduledPoll);
+                sendPollTasks[scheduledPoll.Id] = SendPollAsync(telegramBotClient, context, scheduledPoll, log);
+            }
+
+            var disabledPollIds = sendPollTasks.Keys.Except(enabledPolls.Select(p => p.Id));
+            foreach(var pollId in disabledPollIds)
+            {
+                sendPollTasks.Remove(pollId, out _);
             }
         }
 
         private async Task SendPollAsync(ITelegramBotClient telegramBotClient,
-                                                IScheduledActionContext context, ScheduledPoll scheduledPoll
+                                         IScheduledActionContext context, ScheduledPoll scheduledPoll, ILog log
         )
         {
+            var contextLog = log.ForContext(scheduledPoll.Name);
 
             var nextOccurrence = CrontabSchedule.Parse(scheduledPoll.Schedule).GetNextOccurrence(DateTime.Now);
+            
+            contextLog.Info($"Scheduled to {nextOccurrence}");
             await Task.Delay(nextOccurrence - DateTime.Now);
             
             if(sendPollTasks.ContainsKey(scheduledPoll.Id))
@@ -72,6 +85,11 @@ namespace TelegramInteraction
                                                       isAnonymous: scheduledPoll.IsAnonymous,
                                                       cancellationToken: context.CancellationToken
                 );
+                contextLog.Info("Message was sent");
+            }
+            else
+            {
+                contextLog.Info("Sending was cancelled");
             }
             
             sendPollTasks.Remove(scheduledPoll.Id, out _);

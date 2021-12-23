@@ -62,11 +62,14 @@ namespace TelegramInteraction
             container.ConfigureTelegramClient(applicationSettings);
 
             container.Register<ChatWorker>();
-            container.Register<IPublishRequestValidator, PublishRequestValidator>();
-            container.Register<ITelegramLogger, TelegramLogger>();
-            container.Register<PollSender>();
+            container.Register<IPublishRequestValidator, PublishRequestValidator>(Lifestyle.Singleton);
+            container.Register<ITelegramLogger, TelegramLogger>(Lifestyle.Singleton);
+            container.Register<PollSender>(Lifestyle.Singleton);
             
-            container.Register<IScheduledPollService, ScheduledPollService>();
+            container.Register<ICreatePollRepository, CreatePollRepository>(Lifestyle.Singleton);
+            container.Register<IPollContextFactory, PollContextFactory>(Lifestyle.Singleton);
+            
+            container.Register<IScheduledPollService, ScheduledPollService>(Lifestyle.Singleton);
 
             container.RegisterInstance(environment.Log);
 

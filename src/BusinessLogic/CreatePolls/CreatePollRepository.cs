@@ -9,10 +9,9 @@ namespace BusinessLogic.CreatePolls
 {
     public class CreatePollRepository : ICreatePollRepository
     {
-        private readonly Mapper mapper;
-
-        public CreatePollRepository()
+        public CreatePollRepository(IPollContextFactory pollContextFactory)
         {
+            this.pollContextFactory = pollContextFactory;
             mapper = new Mapper(new MapperConfiguration(
                                     c => c.CreateMap<CreatePollRequestDbo, CreatePollRequest>()
                                           .ReverseMap()
@@ -22,46 +21,31 @@ namespace BusinessLogic.CreatePolls
 
         public async Task CreateAsync(CreatePollRequest createPollRequest)
         {
-            using(var pollsContext = new PollsContext())
-            {
-                var dbo = mapper.Map<CreatePollRequestDbo>(createPollRequest
-                );
+            await using var pollsContext = pollContextFactory.Create();
+            var dbo = mapper.Map<CreatePollRequestDbo>(createPollRequest
+            );
 
-                await pollsContext.Requests.AddAsync(dbo);
-                await pollsContext.SaveChangesAsync();
-            }
+            await pollsContext.Requests.AddAsync(dbo);
+            await pollsContext.SaveChangesAsync();
         }
 
         public async Task<CreatePollRequest[]> FindAsync(int userId)
         {
-            using(var pollsContext = new PollsContext())
-            {
-                var dbos = await pollsContext.Requests.Where(p => p.UserId == userId).ToArrayAsync();
-                return mapper.Map<CreatePollRequest[]>(dbos);
-            }
+            await using var pollsContext = pollContextFactory.Create();
+            var dbos = await pollsContext.Requests.Where(p => p.UserId == userId).ToArrayAsync();
+            return mapper.Map<CreatePollRequest[]>(dbos);
         }
 
         public async Task SaveAsync(CreatePollRequest pendingRequest)
         {
             var dbo = mapper.Map<CreatePollRequestDbo>(pendingRequest);
 
-            using(var pollsContext = new PollsContext())
-            {
-                pollsContext.Requests.Update(dbo);
-                await pollsContext.SaveChangesAsync();
-            }
+            await using var pollsContext = pollContextFactory.Create();
+            pollsContext.Requests.Update(dbo);
+            await pollsContext.SaveChangesAsync();
         }
-    }
 
-    public class PollsContext : DbContext
-    {
-        public DbSet<CreatePollRequestDbo> Requests { get; set; }
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseNpgsql(
-                @"Server=(localdb)\mssqllocaldb;Database=Blogging;Trusted_Connection=True"
-            );
-        }
+        private readonly Mapper mapper;
+        private readonly IPollContextFactory pollContextFactory;
     }
 }

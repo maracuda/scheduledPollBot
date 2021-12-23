@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -22,7 +23,7 @@ namespace TelegramInteraction.Chat
         {
             var text = await File.ReadAllTextAsync("db.json");
 
-            return JsonConvert.DeserializeObject<ScheduledPoll[]>(text);
+            return JsonConvert.DeserializeObject<ScheduledPoll[]>(text) ?? Array.Empty<ScheduledPoll>();
         }
 
         public async Task<ScheduledPoll[]> GetAll(long chatId)

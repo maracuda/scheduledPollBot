@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BusinessLogic.CreatePolls
 {
@@ -7,6 +8,8 @@ namespace BusinessLogic.CreatePolls
         public Guid Id { get; set; }
         public long ChatId { get; set; }
         public int UserId { get; set; }
+        
+        [Column]
         public DateTime CreateAt { get; set; }
         public bool IsPending { get; set; }
         public string PollName { get; set; }

@@ -6,19 +6,19 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Vostok.Applications.AspNetCore" Version="0.2.11" />
-      <PackageReference Include="Vostok.Applications.Scheduled" Version="0.2.8" />
-      <PackageReference Include="Vostok.Hosting" Version="0.3.17" />
+        <PackageReference Include="Vostok.Applications.AspNetCore" Version="0.2.11"/>
+        <PackageReference Include="Vostok.Applications.Scheduled" Version="0.2.8"/>
+        <PackageReference Include="Vostok.Hosting" Version="0.3.17"/>
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\BusinessLogic\BusinessLogic.csproj" />
+        <ProjectReference Include="..\BusinessLogic\BusinessLogic.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
-      <None Update="Settings\settings.txt">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
+        <None Update="Settings\settings.txt">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
     </ItemGroup>
 
 </Project>

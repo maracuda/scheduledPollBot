@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -7,59 +5,38 @@ namespace BusinessLogic.CreatePolls
 {
     public class CreatePollService : ICreatePollService
     {
-        private readonly Dictionary<Guid, CreatePollRequest> createPollRequests;
-
-        public CreatePollService()
+        public CreatePollService(ICreatePollRepository createPollRepository)
         {
-            createPollRequests = new Dictionary<Guid, CreatePollRequest>();
+            this.createPollRepository = createPollRepository;
         }
 
-        public Task CreateAsync(CreatePollRequest createPollRequest)
+        public async Task CreateAsync(CreatePollRequest createPollRequest)
         {
-            createPollRequests.Add(createPollRequest.Id, createPollRequest);
-            return Task.FromResult(createPollRequest.Id);
+            await createPollRepository.CreateAsync(createPollRequest);
         }
 
-        public Task<Guid> CreateAsync(long chatId, int userId)
+        public async Task<CreatePollRequest> FindPendingAsync(long chatId, int userId)
         {
-            var createPollRequest = new CreatePollRequest
-                {
-                    Id = Guid.NewGuid(),
-                    ChatId = chatId,
-                    UserId = userId,
-                    CreateAt = DateTime.Now,
-                    IsPending = true,
-                };
+            var userPolls = await createPollRepository.FindAsync(userId);
 
-            createPollRequests.Add(createPollRequest.Id, createPollRequest);
-            return Task.FromResult(createPollRequest.Id);
+            return userPolls
+                   .Where(v => v.IsPending && v.ChatId == chatId)
+                   .OrderByDescending(v => v.CreateAt)
+                   .FirstOrDefault();
         }
 
-        public Task<CreatePollRequest> FindPendingAsync(long chatId, int userId)
+        public async Task SaveAsync(CreatePollRequest pendingRequest)
         {
-            return Task.FromResult(
-                createPollRequests
-                    .Values
-                    .Where(v => v.IsPending && v.ChatId == chatId && v.UserId == userId)
-                    .OrderByDescending(v => v.CreateAt)
-                    .FirstOrDefault()
-            );
+            await createPollRepository.SaveAsync(pendingRequest);
         }
 
-        public Task SaveAsync(CreatePollRequest pendingRequest)
+        public async Task<CreatePollRequest> FindPendingAndValidAsync(int fromId)
         {
-            createPollRequests[pendingRequest.Id] = pendingRequest;
-            return Task.CompletedTask;
+            var userPolls = await createPollRepository.FindAsync(fromId);
+
+            return userPolls.FirstOrDefault(v => v.IsPending && v.IsValid);
         }
 
-        public Task<CreatePollRequest> FindPendingAndValidAsync(int fromId)
-        {
-            return Task.FromResult(createPollRequests.Values.FirstOrDefault(v =>
-                                                                                v.UserId == fromId
-                                                                                && v.IsPending
-                                                                                && v.IsValid
-                                   )
-            );
-        }
+        private readonly ICreatePollRepository createPollRepository;
     }
 }

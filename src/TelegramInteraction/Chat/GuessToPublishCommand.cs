@@ -39,6 +39,8 @@ namespace TelegramInteraction.Chat
             if(validationResult.IsSuccess)
             {
                 pendingRequest.IsValid = true;
+                await createPollService.SaveAsync(pendingRequest);
+                
                 var bot = await telegramBotClient.GetMeAsync();
                 
                 await telegramBotClient.SendTextMessageAsync(chatId, $"Well done\r\nCall me @{bot.Username} "

@@ -10,6 +10,7 @@ namespace BusinessLogic.CreatePolls
         }
 
         public DbSet<CreatePollRequestDbo> Requests { get; set; }
+        public DbSet<ScheduledPollDbo> Polls { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

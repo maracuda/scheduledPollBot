@@ -70,6 +70,7 @@ namespace TelegramInteraction
             container.Register<IPollContextFactory, PollContextFactory>(Lifestyle.Singleton);
             
             container.Register<IScheduledPollService, ScheduledPollService>(Lifestyle.Singleton);
+            container.Register<IScheduledPollRepository, ScheduledPollRepository>(Lifestyle.Singleton);
 
             container.RegisterInstance(environment.Log);
 

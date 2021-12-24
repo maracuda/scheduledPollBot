@@ -45,8 +45,7 @@ namespace TelegramInteraction
                                          IScheduledActionContext context, ILog log
         )
         {
-            var enabledPolls = (await scheduledPollService.ReadAllAsync())
-                .Where(p => !p.IsDisabled)
+            var enabledPolls = (await scheduledPollService.FindNotDisabledAsync())
                 .ToArray();
 
             foreach(var scheduledPoll in enabledPolls)

@@ -5,7 +5,7 @@ namespace TelegramInteraction.Chat
     public interface IScheduledPollService
     {
         Task CreateAsync(ScheduledPoll scheduledPoll);
-        Task<ScheduledPoll[]> ReadAllAsync();
+        Task<ScheduledPoll[]> FindNotDisabledAsync();
         Task<ScheduledPoll[]> GetAll(long chatId);
         Task SaveAsync(ScheduledPoll poll);
     }

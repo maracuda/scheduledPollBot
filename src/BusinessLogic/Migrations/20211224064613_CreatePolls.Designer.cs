@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BusinessLogic.Migrations
 {
     [DbContext(typeof(PollsContext))]
-    [Migration("20211223060037_CreatePolls")]
+    [Migration("20211224064613_CreatePolls")]
     partial class CreatePolls
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -34,7 +34,7 @@ namespace BusinessLogic.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<DateTime>("CreateAt")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp");
 
                     b.Property<bool>("IsAnonymous")
                         .HasColumnType("boolean");

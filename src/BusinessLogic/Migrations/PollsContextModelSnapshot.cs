@@ -32,7 +32,7 @@ namespace BusinessLogic.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<DateTime>("CreateAt")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp");
 
                     b.Property<bool>("IsAnonymous")
                         .HasColumnType("boolean");

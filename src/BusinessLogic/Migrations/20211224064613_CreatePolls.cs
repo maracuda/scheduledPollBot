@@ -16,7 +16,7 @@ namespace BusinessLogic.Migrations
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     ChatId = table.Column<long>(type: "bigint", nullable: false),
                     UserId = table.Column<int>(type: "integer", nullable: false),
-                    CreateAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    CreateAt = table.Column<DateTime>(type: "timestamp", nullable: false),
                     IsPending = table.Column<bool>(type: "boolean", nullable: false),
                     PollName = table.Column<string>(type: "text", nullable: true),
                     IsAnonymous = table.Column<bool>(type: "boolean", nullable: false),

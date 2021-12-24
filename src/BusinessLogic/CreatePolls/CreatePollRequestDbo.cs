@@ -9,7 +9,7 @@ namespace BusinessLogic.CreatePolls
         public long ChatId { get; set; }
         public int UserId { get; set; }
         
-        [Column]
+        [Column(TypeName = "timestamp")]
         public DateTime CreateAt { get; set; }
         public bool IsPending { get; set; }
         public string PollName { get; set; }

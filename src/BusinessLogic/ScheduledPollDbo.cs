@@ -1,7 +1,9 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BusinessLogic
 {
+    [Table("polls")]
     public class ScheduledPollDbo
     {
         public Guid Id { get; set; }

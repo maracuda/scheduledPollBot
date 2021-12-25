@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BusinessLogic.CreatePolls
 {
+    [Table("requests")]
     public class CreatePollRequestDbo
     {
         public Guid Id { get; set; }

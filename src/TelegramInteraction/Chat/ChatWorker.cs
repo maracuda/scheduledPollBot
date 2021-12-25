@@ -33,7 +33,11 @@ namespace TelegramInteraction.Chat
                                ErrorHandler,
                                new ReceiverOptions
                                    {
-                                       AllowedUpdates = new[] { UpdateType.Message, UpdateType.CallbackQuery },
+                                       AllowedUpdates = new[]
+                                           {
+                                               UpdateType.Message, UpdateType.CallbackQuery,
+                                               
+                                           },
                                    },
                                cancellationToken
             );

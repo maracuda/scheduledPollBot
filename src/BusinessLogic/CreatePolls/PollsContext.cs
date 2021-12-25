@@ -1,7 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-using Npgsql;
-
 namespace BusinessLogic.CreatePolls
 {
     public class PollsContext : DbContext
@@ -16,7 +14,7 @@ namespace BusinessLogic.CreatePolls
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseNpgsql();
+            optionsBuilder.UseNpgsql(connectionString);
         }
 
         private readonly string connectionString;

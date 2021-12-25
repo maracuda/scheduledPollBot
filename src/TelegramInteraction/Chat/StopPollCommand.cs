@@ -45,7 +45,7 @@ namespace TelegramInteraction.Chat
         }
 
         public bool CanHandle(Update update) =>
-            update.Message != null
+            update?.Message?.Text != null
             && update.Message.Text.Contains("/stop");
 
         private readonly ITelegramBotClient telegramBotClient;

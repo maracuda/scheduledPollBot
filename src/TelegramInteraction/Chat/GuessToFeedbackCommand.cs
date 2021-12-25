@@ -23,7 +23,7 @@ namespace TelegramInteraction.Chat
             );
         }
 
-        public bool CanHandle(Update update) => update.Message != null && update.Message.Text.StartsWith("/feedback");
+        public bool CanHandle(Update update) => update?.Message?.Text != null && update.Message.Text.StartsWith("/feedback");
         private readonly ITelegramBotClient telegramBotClient;
     }
 }

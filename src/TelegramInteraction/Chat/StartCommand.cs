@@ -22,7 +22,7 @@ namespace TelegramInteraction.Chat
             );
             await telegramBotClient.SendPhotoAsync(update.Message.Chat.Id,
                                                    new InputOnlineFile(
-                                                       "AgACAgIAAxkBAAIDTmG2FGWl43P3RENjZF6bQZTLrAwOAAJktzEbAmmwSd2POqDMKGYfAQADAgADcwADIwQ"
+                                                       "AgACAgIAAxkBAANQYcdcL6r8D8f5WMTU4Q7NHRRafUcAAi26MRtMLkBKog710sE10ccBAAMCAANtAAMjBA"
                                                    )
             );
 
@@ -31,14 +31,14 @@ namespace TelegramInteraction.Chat
             );
             await telegramBotClient.SendPhotoAsync(update.Message.Chat.Id,
                                                    new InputOnlineFile(
-                                                       "AgACAgIAAxkBAAIDT2G2FKVDT2Eouunzh_mOy87KfKXaAAJltzEbAmmwSfuDbRGh6bIqAQADAgADbQADIwQ"
+                                                       "AgACAgIAAxkBAANSYcdcbVnT8K_ipg3q7EuUKGI8zY0AAi66MRtMLkBKmiSOO698IhwBAAMCAANtAAMjBA"
                                                    )
             );
 
             await telegramBotClient.SendTextMessageAsync(update.Message.Chat.Id, "To create poll type /new");
         }
 
-        public bool CanHandle(Update update) => update.Message != null && update.Message.Text.StartsWith("/start");
+        public bool CanHandle(Update update) => update?.Message?.Text != null && update.Message.Text.StartsWith("/start");
         private readonly ITelegramBotClient telegramBotClient;
     }
 }

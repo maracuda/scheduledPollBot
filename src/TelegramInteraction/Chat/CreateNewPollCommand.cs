@@ -50,6 +50,6 @@ namespace TelegramInteraction.Chat
         }
 
         public bool CanHandle(Update update) =>
-            update.Message != null && update.Type == UpdateType.Message && update.Message.Text.Contains("/new");
+            update?.Message?.Text != null && update.Message.Text.Contains("/new");
     }
 }

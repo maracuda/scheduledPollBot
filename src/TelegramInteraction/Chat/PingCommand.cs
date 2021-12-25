@@ -12,7 +12,7 @@ namespace TelegramInteraction.Chat
             this.telegramBotClient = telegramBotClient;
         }
 
-        public bool CanHandle(Update update) => update.Message != null && update.Message.Text.Contains("/ping");
+        public bool CanHandle(Update update) => update?.Message?.Text != null && update.Message.Text.Contains("/ping");
 
         public async Task ExecuteAsync(Update update)
         {

@@ -29,7 +29,7 @@ namespace BusinessLogic.CreatePolls
             await pollsContext.SaveChangesAsync();
         }
 
-        public async Task<CreatePollRequest[]> FindAsync(int userId)
+        public async Task<CreatePollRequest[]> FindAsync(long userId)
         {
             await using var pollsContext = pollContextFactory.Create();
             var dbos = await pollsContext.Requests.Where(p => p.UserId == userId).ToArrayAsync();

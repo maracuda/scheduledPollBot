@@ -8,7 +8,7 @@ namespace BusinessLogic.CreatePolls
     {
         public Guid Id { get; set; }
         public long ChatId { get; set; }
-        public int UserId { get; set; }
+        public long UserId { get; set; }
         
         [Column(TypeName = "timestamp")]
         public DateTime CreateAt { get; set; }

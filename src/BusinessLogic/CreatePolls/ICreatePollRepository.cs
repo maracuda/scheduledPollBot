@@ -5,7 +5,7 @@ namespace BusinessLogic.CreatePolls
     public interface ICreatePollRepository
     {
         Task CreateAsync(CreatePollRequest createPollRequest);
-        Task<CreatePollRequest[]> FindAsync(int userId);
+        Task<CreatePollRequest[]> FindAsync(long userId);
         Task SaveAsync(CreatePollRequest pendingRequest);
     }
 }

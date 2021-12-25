@@ -3,7 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using Telegram.Bot;
-using Telegram.Bot.Args;
+using Telegram.Bot.Types;
 
 namespace TelegramInteraction.Chat
 {
@@ -17,10 +17,8 @@ namespace TelegramInteraction.Chat
             this.commands = commands;
         }
 
-        public async Task RouteAsync(UpdateEventArgs updateEventArgs)
+        public async Task RouteAsync(Update update)
         {
-            var update = updateEventArgs.Update;
-
             var chatCommands = commands.Where(c => c.CanHandle(update)).ToArray();
 
             if(chatCommands.Count() > 1)

@@ -15,7 +15,7 @@ namespace BusinessLogic.CreatePolls
             await createPollRepository.CreateAsync(createPollRequest);
         }
 
-        public async Task<CreatePollRequest> FindPendingAsync(long chatId, int userId)
+        public async Task<CreatePollRequest> FindPendingAsync(long chatId, long userId)
         {
             var userPolls = await createPollRepository.FindAsync(userId);
 
@@ -30,7 +30,7 @@ namespace BusinessLogic.CreatePolls
             await createPollRepository.SaveAsync(pendingRequest);
         }
 
-        public async Task<CreatePollRequest> FindPendingAndValidAsync(int fromId)
+        public async Task<CreatePollRequest> FindPendingAndValidAsync(long fromId)
         {
             var userPolls = await createPollRepository.FindAsync(fromId);
 

@@ -6,6 +6,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="Telegram.Bot.Extensions.Polling" Version="1.0.1" />
         <PackageReference Include="Vostok.Applications.AspNetCore" Version="0.2.11" />
         <PackageReference Include="Vostok.Applications.Scheduled" Version="0.2.8" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.1">
@@ -26,6 +27,6 @@
     </ItemGroup>
     
     <Target Name="PrePublishTarget" AfterTargets="Publish">
-        <Exec Command="dotnet ef database update -p ../BusinessLogic --startup-project ../BusinessLogic"  />
+        <Exec Command="dotnet ef database update -p ../BusinessLogic --startup-project ../BusinessLogic" />
     </Target>
 </Project>

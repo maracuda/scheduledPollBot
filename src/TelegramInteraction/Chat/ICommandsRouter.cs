@@ -1,11 +1,11 @@
 ﻿using System.Threading.Tasks;
 
-using Telegram.Bot.Args;
+using Telegram.Bot.Types;
 
 namespace TelegramInteraction.Chat
 {
     public interface ICommandsRouter
     {
-        Task RouteAsync(UpdateEventArgs updateEventArgs);
+        Task RouteAsync(Update updateEventArgs);
     }
 }

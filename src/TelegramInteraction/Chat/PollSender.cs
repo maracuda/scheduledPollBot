@@ -27,35 +27,30 @@ namespace TelegramInteraction.Chat
                                                           {
                                                               new[]
                                                                   {
-                                                                      new InlineKeyboardButton
+                                                                      new InlineKeyboardButton("Name")
                                                                           {
-                                                                              Text = "Name",
                                                                               CallbackData = ChatConstants.NameCallback,
                                                                           },
-                                                                      new InlineKeyboardButton
+                                                                      new InlineKeyboardButton("Anonymous")
                                                                           {
-                                                                              Text = "Anonymous",
                                                                               CallbackData = ChatConstants.AnonymousCallback,
                                                                           },
                                                                   },
                                                               new[]
                                                                   {
-                                                                      new InlineKeyboardButton
+                                                                      new InlineKeyboardButton("Options")
                                                                           {
-                                                                              Text = "Options",
                                                                               CallbackData = ChatConstants.OptionsCallback,
                                                                           },
-                                                                      new InlineKeyboardButton
+                                                                      new InlineKeyboardButton("Schedule")
                                                                           {
-                                                                              Text = "Schedule",
                                                                               CallbackData = ChatConstants.ScheduleCallback,
                                                                           },
                                                                   },
                                                               new[]
                                                                   {
-                                                                      new InlineKeyboardButton
+                                                                      new InlineKeyboardButton("Publish")
                                                                           {
-                                                                              Text = "Publish",
                                                                               CallbackData = ChatConstants.PublishCallback,
                                                                           },
                                                                   },

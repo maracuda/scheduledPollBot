@@ -59,7 +59,7 @@ namespace TelegramInteraction
 
             var applicationSettings = ApplicationSettingsProvider.Get(environment.ApplicationIdentity.Environment);
             container.RegisterInstance(applicationSettings);
-            container.ConfigureTelegramClient(applicationSettings);
+            container.ConfigureTelegramClient(applicationSettings, environment.Log);
 
             container.Register<ChatWorker>();
             container.Register<IPublishRequestValidator, PublishRequestValidator>(Lifestyle.Singleton);

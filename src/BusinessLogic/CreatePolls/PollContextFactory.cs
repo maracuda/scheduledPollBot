@@ -11,13 +11,25 @@ namespace BusinessLogic.CreatePolls
 
         public PollsContext CreateDbContext(string[] args)
         {
-            var localApplicationSettings = ApplicationSettingsProvider.Get(EnvironmentType.Production);
+            var environment = EnvironmentType.Production;
 
-            var databaseUrl = localApplicationSettings.GetString("DATABASE_URL");
-            var p = new PostgreUrlParser().Parse(databaseUrl);
+            if(environment == EnvironmentType.Production)
+            {
+                var localApplicationSettings = ApplicationSettingsProvider.Get(EnvironmentType.Production);
 
-            var connectionString = $"Host={p.HostAndPort};Database={p.DatabaseName};Username={p.UserName};Password={p.Password}";
-            return new PollsContext(connectionString);
+                var databaseUrl = localApplicationSettings.GetString("DATABASE_URL");
+                var p = new PostgreUrlParser().Parse(databaseUrl);
+
+                var connectionString = $"Host={p.HostAndPort};Database={p.DatabaseName};Username={p.UserName};Password={p.Password}";
+                return new PollsContext(connectionString);   
+            }
+            else
+            {
+                var localApplicationSettings = ApplicationSettingsProvider.Get(EnvironmentType.Develop);
+
+                var databaseUrl = localApplicationSettings.GetString("DATABASE_URL");
+                return new PollsContext(databaseUrl);
+            }
         }
     }
 }

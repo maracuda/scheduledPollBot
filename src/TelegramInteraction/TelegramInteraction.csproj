@@ -26,6 +26,6 @@
     </ItemGroup>
     
     <Target Name="PrePublishTarget" AfterTargets="Publish">
-        <Exec Command="dotnet ef database update -p ../BusinessLogic" />
+        <Exec Command="dotnet ef database update -p ../BusinessLogic --startup-project ../BusinessLogic"  />
     </Target>
 </Project>

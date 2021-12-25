@@ -1,0 +1,4 @@
+new - create new scheduled poll
+schedule - add poll to group and start send poll by schedule
+stop - stop sending poll by schedule
+feedback - send a feedback to developers

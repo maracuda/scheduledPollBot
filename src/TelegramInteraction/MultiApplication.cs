@@ -3,6 +3,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 
 using BusinessLogic;
+using BusinessLogic.CreatePolls;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -58,9 +59,18 @@ namespace TelegramInteraction
 
             var applicationSettings = ApplicationSettingsProvider.Get(environment.ApplicationIdentity.Environment);
             container.RegisterInstance(applicationSettings);
-            container.ConfigureTelegramClient(applicationSettings);
+            container.ConfigureTelegramClient(applicationSettings, environment.Log);
 
             container.Register<ChatWorker>();
+            container.Register<IPublishRequestValidator, PublishRequestValidator>(Lifestyle.Singleton);
+            container.Register<ITelegramLogger, TelegramLogger>(Lifestyle.Singleton);
+            container.Register<PollSender>(Lifestyle.Singleton);
+            
+            container.Register<ICreatePollRepository, CreatePollRepository>(Lifestyle.Singleton);
+            container.Register<IPollContextFactory, PollContextFactory>(Lifestyle.Singleton);
+            
+            container.Register<IScheduledPollService, ScheduledPollService>(Lifestyle.Singleton);
+            container.Register<IScheduledPollRepository, ScheduledPollRepository>(Lifestyle.Singleton);
 
             container.RegisterInstance(environment.Log);
 
@@ -74,6 +84,7 @@ namespace TelegramInteraction
             }
             
             container.Register<ICommandsRouter, CommandsRouter>();
+            container.Register<ICreatePollService, CreatePollService>(Lifestyle.Singleton);
 
             container.Collection.Register<IChatCommand>(typeof(PingCommand).Assembly);
             

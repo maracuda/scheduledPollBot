@@ -12,10 +12,11 @@ namespace TelegramInteraction.Chat
             this.telegramBotClient = telegramBotClient;
         }
 
-        public string[] SupportedTemplates => new[] {"/ping"};
+        public bool CanHandle(Update update) => update.Message != null && update.Message.Text.Contains("/ping");
 
-        public async Task ExecuteAsync(Message message)
+        public async Task ExecuteAsync(Update update)
         {
+            var message = update.Message;
             await telegramBotClient.SendTextMessageAsync(
                 chatId: message.Chat.Id,
                 text: "pong"

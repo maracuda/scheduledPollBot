@@ -1,8 +1,9 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 using Telegram.Bot;
-using Telegram.Bot.Types;
+using Telegram.Bot.Args;
 
 namespace TelegramInteraction.Chat
 {
@@ -16,27 +17,42 @@ namespace TelegramInteraction.Chat
             this.commands = commands;
         }
 
-        public async Task RouteAsync(Message message)
+        public async Task RouteAsync(UpdateEventArgs updateEventArgs)
         {
-            var commandText = message.Text.Split(' ').First();
-            var chatCommand = commands.SingleOrDefault(c => c.SupportedTemplates.Contains(commandText));
+            var update = updateEventArgs.Update;
 
-            if(chatCommand != null)
+            var chatCommands = commands.Where(c => c.CanHandle(update)).ToArray();
+
+            if(chatCommands.Count() > 1)
             {
-                await chatCommand.ExecuteAsync(message);
+                throw new Exception(
+                    $"Can't choose between commands "
+                    + $"{string.Join(",", chatCommands.Select(c => c.GetType().Name))}"
+                );
+            }
+
+            var command = chatCommands.SingleOrDefault();
+
+            if(command != null)
+            {
+                await command.ExecuteAsync(update);
                 return;
             }
-            
+
+            /*
+            var commandText = message.Text.Split(' ').First();
             if(commandText.StartsWith("/"))
             {
                 await telegramBotClient.SendTextMessageAsync(
                     chatId: message.Chat.Id,
                     text: $"Не знаю что ответить, попробуй что-то из знакомого:\r\n"
-                          + $"{string.Join("\r\n", commands.SelectMany(c => c.SupportedTemplates))}"
+                          + $"{string.Join("\r\n", new[] { "/help", "/start", "/new" })}"
                 );
-            }
+            }*/
+            ;
         }
 
+        // ReSharper disable once NotAccessedField.Local
         private readonly ITelegramBotClient telegramBotClient;
         private readonly IChatCommand[] commands;
     }

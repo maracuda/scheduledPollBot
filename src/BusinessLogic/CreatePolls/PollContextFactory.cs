@@ -13,7 +13,7 @@ namespace BusinessLogic.CreatePolls
         {
             var localApplicationSettings = new LocalApplicationSettings();
             
-            return new PollsContext(localApplicationSettings.GetString("PostgreSqlConnectionString"));
+            return new PollsContext(localApplicationSettings.GetString("DATABASE_URL"));
         }
     }
 }

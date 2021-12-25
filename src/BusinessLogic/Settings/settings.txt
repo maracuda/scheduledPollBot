@@ -1,1 +1,1 @@
-﻿PostgreSqlConnectionString == Host=127.0.0.1;Database=polls;Username=postgres;Password=postgres
+﻿DATABASE_URL == Host=127.0.0.1;Database=polls;Username=postgres;Password=postgres

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
 
+using BusinessLogic;
+
 using Vostok.Hosting;
 using Vostok.Hosting.Setup;
 

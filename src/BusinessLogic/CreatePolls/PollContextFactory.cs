@@ -11,7 +11,7 @@ namespace BusinessLogic.CreatePolls
 
         public PollsContext CreateDbContext(string[] args)
         {
-            var localApplicationSettings = new LocalApplicationSettings();
+            var localApplicationSettings = ApplicationSettingsProvider.Get(EnvironmentType.Production);
             
             return new PollsContext(localApplicationSettings.GetString("DATABASE_URL"));
         }

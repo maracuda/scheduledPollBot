@@ -1,4 +1,4 @@
-﻿namespace TelegramInteraction
+﻿namespace BusinessLogic
 {
     public class EnvironmentType
     {

@@ -1,8 +1,6 @@
 ﻿using System;
 
-using BusinessLogic;
-
-namespace TelegramInteraction
+namespace BusinessLogic
 {
     public class HerokuApplicationSettings : IApplicationSettings
     {

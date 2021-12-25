@@ -1,6 +1,4 @@
-﻿using BusinessLogic;
-
-namespace TelegramInteraction
+﻿namespace BusinessLogic
 {
     public static class ApplicationSettingsProvider
     {

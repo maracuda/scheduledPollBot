@@ -56,10 +56,11 @@ namespace TelegramInteraction
         public override Task PreInitializeAsync(IVostokHostingEnvironment environment)
         {
             var container = new Container();
+            var environmentLog = environment.Log.WithEventsDroppedBySourceContext("Scheduler");
 
             var applicationSettings = ApplicationSettingsProvider.Get(environment.ApplicationIdentity.Environment);
             container.RegisterInstance(applicationSettings);
-            container.ConfigureTelegramClient(applicationSettings, environment.Log);
+            container.ConfigureTelegramClient(applicationSettings, environmentLog);
 
             container.Register<ChatWorker>();
             container.Register<IPublishRequestValidator, PublishRequestValidator>(Lifestyle.Singleton);
@@ -72,7 +73,7 @@ namespace TelegramInteraction
             container.Register<IScheduledPollService, ScheduledPollService>(Lifestyle.Singleton);
             container.Register<IScheduledPollRepository, ScheduledPollRepository>(Lifestyle.Singleton);
 
-            container.RegisterInstance(environment.Log);
+            container.RegisterInstance(environmentLog);
 
             if(environment.ApplicationIdentity.Environment == EnvironmentType.Production)
             {

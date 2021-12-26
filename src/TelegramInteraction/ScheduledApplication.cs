@@ -47,7 +47,8 @@ namespace TelegramInteraction
         {
             var enabledPolls = (await scheduledPollService.FindNotDisabledAsync())
                 .ToArray();
-            log.Info($"***Enabled polls: {string.Join(",", enabledPolls.Select(p => p.Name))}");
+            log.Warn($"***Enabled polls: {string.Join(",", enabledPolls.Select(p => p.Name))}");
+            log.Warn($"***Tasks in dict: {string.Join(",", sendPollTasks.Keys)}");
 
             foreach(var scheduledPoll in enabledPolls)
             {
@@ -63,7 +64,7 @@ namespace TelegramInteraction
             foreach(var pollId in disabledPollIds)
             {
                 sendPollTasks.Remove(pollId, out _);
-                log.Info($"***Poll {pollId} was removed");
+                log.Warn($"***Poll {pollId} was removed");
             }
         }
 
@@ -77,10 +78,11 @@ namespace TelegramInteraction
 
             var timeToSleep = nextOccurrence - DateTime.Now;
             
-            contextLog.Info($"***Scheduled to {nextOccurrence}, sleep for {timeToSleep}");
+            contextLog.Warn($"***Scheduled to {nextOccurrence}, sleep for {timeToSleep}");
             await Task.Delay(timeToSleep);
-            contextLog.Info($"***Wake up");
+            contextLog.Warn($"***Wake up");
             
+            contextLog.Warn($"***Dict key: {string.Join(",", sendPollTasks.Keys)}");
             if(sendPollTasks.ContainsKey(scheduledPoll.Id))
             {
                 await telegramBotClient.SendPollAsync(scheduledPoll.ChatId,
@@ -89,11 +91,11 @@ namespace TelegramInteraction
                                                       isAnonymous: scheduledPoll.IsAnonymous,
                                                       cancellationToken: context.CancellationToken
                 );
-                contextLog.Info("***Message was sent");
+                contextLog.Warn("***Message was sent");
             }
             else
             {
-                contextLog.Info("***Sending was cancelled");
+                contextLog.Warn("***Sending was cancelled");
             }
             
             sendPollTasks.Remove(scheduledPoll.Id, out _);

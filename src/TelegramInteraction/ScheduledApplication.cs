@@ -32,17 +32,18 @@ namespace TelegramInteraction
             
             var telegramBotClient = container.GetInstance<ITelegramBotClient>();
             var scheduledPollService = container.GetInstance<IScheduledPollService>();
+            var telegramLogger = container.GetInstance<TelegramLogger>();
             var log = container.GetInstance<ILog>();
 
             builder.Schedule("Poll sending scheduler",
                              Scheduler.Periodical(2.Seconds()),
-                             context => ScheduleTasks(scheduledPollService, telegramBotClient, context, log)
+                             context => ScheduleTasks(scheduledPollService, telegramBotClient, context, log, telegramLogger)
             );
         }
 
         private async Task ScheduleTasks(IScheduledPollService scheduledPollService,
                                          ITelegramBotClient telegramBotClient,
-                                         IScheduledActionContext context, ILog log
+                                         IScheduledActionContext context, ILog log, TelegramLogger telegramLogger
         )
         {
             var enabledPolls = (await scheduledPollService.FindNotDisabledAsync())
@@ -57,24 +58,19 @@ namespace TelegramInteraction
                     continue;
                 }
 
-                sendPollTasks[scheduledPoll.Id] = Task.Run(() =>
-                        {
-                            try
-                            {
-                                return SendPollAsync(telegramBotClient,
-                                                     context,
-                                                     scheduledPoll,
-                                                     log
-                                );
-                            }
-                            catch(Exception exception)
-                            {
-                                log.Error(exception);
-                            }
-
-                            return Task.CompletedTask;
-                        }
-                );
+                sendPollTasks[scheduledPoll.Id] = Task.Run(() => SendPollAsync(telegramBotClient,
+                                                                               context,
+                                                                               scheduledPoll,
+                                                                               log
+                                                           )
+                ).ContinueWith(async t => { 
+                        log.Error(t.Exception);
+                        await telegramBotClient.SendTextMessageAsync(scheduledPoll.ChatId,
+                                                                     $"Sorry, can't send poll because of error, developers are know it and will contact you"
+                        );
+                        telegramLogger.Log(t.Exception);
+                        
+                    }, TaskContinuationOptions.OnlyOnFaulted);;
             }
 
             var disabledPollIds = sendPollTasks.Keys.Except(enabledPolls.Select(p => p.Id));
@@ -116,7 +112,7 @@ namespace TelegramInteraction
                 contextLog.Warn("***Sending was cancelled");
             }
             
-            sendPollTasks.Remove(scheduledPoll.Id, out _);
+             sendPollTasks.Remove(scheduledPoll.Id, out _);
         }
     }
 }

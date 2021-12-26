@@ -57,7 +57,24 @@ namespace TelegramInteraction
                     continue;
                 }
 
-                sendPollTasks[scheduledPoll.Id] = Task.Run(() => SendPollAsync(telegramBotClient, context, scheduledPoll, log));
+                sendPollTasks[scheduledPoll.Id] = Task.Run(() =>
+                        {
+                            try
+                            {
+                                return SendPollAsync(telegramBotClient,
+                                                     context,
+                                                     scheduledPoll,
+                                                     log
+                                );
+                            }
+                            catch(Exception exception)
+                            {
+                                log.Error(exception);
+                            }
+
+                            return Task.CompletedTask;
+                        }
+                );
             }
 
             var disabledPollIds = sendPollTasks.Keys.Except(enabledPolls.Select(p => p.Id));

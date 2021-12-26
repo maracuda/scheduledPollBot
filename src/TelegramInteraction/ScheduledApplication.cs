@@ -85,34 +85,39 @@ namespace TelegramInteraction
                                          IScheduledActionContext context, ScheduledPoll scheduledPoll, ILog log
         )
         {
-            var contextLog = log.ForContext(scheduledPoll.Name);
-
-            var nextOccurrence = CrontabSchedule.Parse(scheduledPoll.Schedule).GetNextOccurrence(DateTime.Now);
-
-            var timeToSleep = nextOccurrence - DateTime.Now;
-            
-            contextLog.Warn($"***Scheduled to {nextOccurrence}, sleep for {timeToSleep}");
-            await Task.Delay(timeToSleep);
-            contextLog.Warn($"***Wake up");
-            
-            contextLog.Warn($"***Dict key: {string.Join(",", sendPollTasks.Keys)}");
-            if(sendPollTasks.ContainsKey(scheduledPoll.Id))
+            try
             {
-                contextLog.Warn($"*** Before poll sendings");
-                await telegramBotClient.SendPollAsync(scheduledPoll.ChatId,
-                                                      scheduledPoll.Name,
-                                                      scheduledPoll.Options,
-                                                      isAnonymous: scheduledPoll.IsAnonymous,
-                                                      cancellationToken: context.CancellationToken
-                );
-                contextLog.Warn("***Message was sent");
-            }
-            else
-            {
-                contextLog.Warn("***Sending was cancelled");
-            }
+                var contextLog = log.ForContext(scheduledPoll.Name);
+
+                var nextOccurrence = CrontabSchedule.Parse(scheduledPoll.Schedule).GetNextOccurrence(DateTime.Now);
+
+                var timeToSleep = nextOccurrence - DateTime.Now;
             
-             sendPollTasks.Remove(scheduledPoll.Id, out _);
+                contextLog.Warn($"***Scheduled to {nextOccurrence}, sleep for {timeToSleep}");
+                await Task.Delay(timeToSleep);
+                contextLog.Warn($"***Wake up");
+            
+                contextLog.Warn($"***Dict key: {string.Join(",", sendPollTasks.Keys)}");
+                if(sendPollTasks.ContainsKey(scheduledPoll.Id))
+                {
+                    contextLog.Warn($"*** Before poll sendings");
+                    await telegramBotClient.SendPollAsync(scheduledPoll.ChatId,
+                                                          scheduledPoll.Name,
+                                                          scheduledPoll.Options,
+                                                          isAnonymous: scheduledPoll.IsAnonymous,
+                                                          cancellationToken: context.CancellationToken
+                    );
+                    contextLog.Warn("***Message was sent");
+                }
+                else
+                {
+                    contextLog.Warn("***Sending was cancelled");
+                }
+            }
+            finally
+            {
+                sendPollTasks.Remove(scheduledPoll.Id, out _);
+            }
         }
     }
 }

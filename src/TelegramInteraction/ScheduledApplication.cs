@@ -32,7 +32,7 @@ namespace TelegramInteraction
             
             var telegramBotClient = container.GetInstance<ITelegramBotClient>();
             var scheduledPollService = container.GetInstance<IScheduledPollService>();
-            var telegramLogger = container.GetInstance<TelegramLogger>();
+            var telegramLogger = container.GetInstance<ITelegramLogger>();
             var log = container.GetInstance<ILog>();
 
             builder.Schedule("Poll sending scheduler",
@@ -43,7 +43,7 @@ namespace TelegramInteraction
 
         private async Task ScheduleTasks(IScheduledPollService scheduledPollService,
                                          ITelegramBotClient telegramBotClient,
-                                         IScheduledActionContext context, ILog log, TelegramLogger telegramLogger
+                                         IScheduledActionContext context, ILog log, ITelegramLogger telegramLogger
         )
         {
             var enabledPolls = (await scheduledPollService.FindNotDisabledAsync())

@@ -102,6 +102,7 @@ namespace TelegramInteraction
             contextLog.Warn($"***Dict key: {string.Join(",", sendPollTasks.Keys)}");
             if(sendPollTasks.ContainsKey(scheduledPoll.Id))
             {
+                contextLog.Warn($"*** Before poll sendings");
                 await telegramBotClient.SendPollAsync(scheduledPoll.ChatId,
                                                       scheduledPoll.Name,
                                                       scheduledPoll.Options,

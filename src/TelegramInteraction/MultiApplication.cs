@@ -46,7 +46,7 @@ namespace TelegramInteraction
                                  var httpClient = new HttpClient();
 
                                  var response =
-                                     await httpClient.GetAsync("https://kontur-sport-bot.herokuapp.com/_status/ping");
+                                     await httpClient.GetAsync("https://pollscheduler.herokuapp.com/_status/ping");
 
                                  environment.Log.Info($"Ping result: {response.StatusCode}");
                              }

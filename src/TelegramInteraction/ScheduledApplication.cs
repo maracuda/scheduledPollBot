@@ -47,6 +47,7 @@ namespace TelegramInteraction
         {
             var enabledPolls = (await scheduledPollService.FindNotDisabledAsync())
                 .ToArray();
+            log.Info($"***Enabled polls: {string.Join(",", enabledPolls.Select(p => p.Name))}");
 
             foreach(var scheduledPoll in enabledPolls)
             {
@@ -55,13 +56,14 @@ namespace TelegramInteraction
                     continue;
                 }
 
-                sendPollTasks[scheduledPoll.Id] = SendPollAsync(telegramBotClient, context, scheduledPoll, log);
+                sendPollTasks[scheduledPoll.Id] = Task.Run(() => SendPollAsync(telegramBotClient, context, scheduledPoll, log));
             }
 
             var disabledPollIds = sendPollTasks.Keys.Except(enabledPolls.Select(p => p.Id));
             foreach(var pollId in disabledPollIds)
             {
                 sendPollTasks.Remove(pollId, out _);
+                log.Info($"***Poll {pollId} was removed");
             }
         }
 
@@ -72,9 +74,12 @@ namespace TelegramInteraction
             var contextLog = log.ForContext(scheduledPoll.Name);
 
             var nextOccurrence = CrontabSchedule.Parse(scheduledPoll.Schedule).GetNextOccurrence(DateTime.Now);
+
+            var timeToSleep = nextOccurrence - DateTime.Now;
             
-            contextLog.Info($"Scheduled to {nextOccurrence}");
-            await Task.Delay(nextOccurrence - DateTime.Now);
+            contextLog.Info($"***Scheduled to {nextOccurrence}, sleep for {timeToSleep}");
+            await Task.Delay(timeToSleep);
+            contextLog.Info($"***Wake up");
             
             if(sendPollTasks.ContainsKey(scheduledPoll.Id))
             {
@@ -84,11 +89,11 @@ namespace TelegramInteraction
                                                       isAnonymous: scheduledPoll.IsAnonymous,
                                                       cancellationToken: context.CancellationToken
                 );
-                contextLog.Info("Message was sent");
+                contextLog.Info("***Message was sent");
             }
             else
             {
-                contextLog.Info("Sending was cancelled");
+                contextLog.Info("***Sending was cancelled");
             }
             
             sendPollTasks.Remove(scheduledPoll.Id, out _);

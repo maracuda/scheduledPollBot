@@ -22,14 +22,12 @@ namespace TelegramInteraction
 {
     public class ScheduledApplication : VostokScheduledAsyncApplication
     {
-        private ConcurrentDictionary<Guid, Task> sendPollTasks;
-
         protected override async Task SetupAsync(IScheduledActionsBuilder builder, IVostokHostingEnvironment environment
         )
         {
             sendPollTasks = new ConcurrentDictionary<Guid, Task>();
             var container = environment.HostExtensions.Get<Container>();
-            
+
             var telegramBotClient = container.GetInstance<ITelegramBotClient>();
             var scheduledPollService = container.GetInstance<IScheduledPollService>();
             var telegramLogger = container.GetInstance<ITelegramLogger>();
@@ -37,7 +35,12 @@ namespace TelegramInteraction
 
             builder.Schedule("Poll sending scheduler",
                              Scheduler.Periodical(2.Seconds()),
-                             context => ScheduleTasks(scheduledPollService, telegramBotClient, context, log, telegramLogger)
+                             context => ScheduleTasks(scheduledPollService,
+                                                      telegramBotClient,
+                                                      context,
+                                                      log,
+                                                      telegramLogger
+                             )
             );
         }
 
@@ -46,8 +49,7 @@ namespace TelegramInteraction
                                          IScheduledActionContext context, ILog log, ITelegramLogger telegramLogger
         )
         {
-            var enabledPolls = (await scheduledPollService.FindNotDisabledAsync())
-                .ToArray();
+            var enabledPolls = (await scheduledPollService.FindNotDisabledAsync()).ToArray();
             log.Warn($"***Enabled polls: {string.Join(",", enabledPolls.Select(p => p.Name))}");
             log.Warn($"***Tasks in dict: {string.Join(",", sendPollTasks.Keys)}");
 
@@ -58,19 +60,30 @@ namespace TelegramInteraction
                     continue;
                 }
 
-                sendPollTasks[scheduledPoll.Id] = Task.Run(() => SendPollAsync(telegramBotClient,
-                                                                               context,
-                                                                               scheduledPoll,
-                                                                               log
-                                                           )
-                ).ContinueWith(async t => { 
-                        log.Error(t.Exception);
-                        await telegramBotClient.SendTextMessageAsync(scheduledPoll.ChatId,
-                                                                     $"Sorry, can't send poll because of error, developers are know it and will contact you"
-                        );
-                        telegramLogger.Log(t.Exception);
-                        
-                    }, TaskContinuationOptions.OnlyOnFaulted);;
+                var now = DateTime.Now;
+                // 10 секунд должны быть больше чем время запуска шедулера, сейчас это 2 секунды
+                if(CrontabSchedule.Parse(scheduledPoll.Schedule).GetNextOccurrence(now) - now < 10.Seconds())
+                {
+                    sendPollTasks[scheduledPoll.Id] =
+                        Task.Run(() => SendPollAsync(telegramBotClient,
+                                                     context,
+                                                     scheduledPoll,
+                                                     log
+                                 )
+                            )
+                            .ContinueWith(async t =>
+                                              {
+                                                  log.Error(t.Exception);
+                                                  await telegramBotClient
+                                                      .SendTextMessageAsync(
+                                                          scheduledPoll.ChatId,
+                                                          $"Sorry, can't send poll because of error, developers are know it and will contact you"
+                                                      );
+                                                  telegramLogger.Log(t.Exception);
+                                              },
+                                          TaskContinuationOptions.OnlyOnFaulted
+                            );
+                }
             }
 
             var disabledPollIds = sendPollTasks.Keys.Except(enabledPolls.Select(p => p.Id));
@@ -92,11 +105,10 @@ namespace TelegramInteraction
                 var nextOccurrence = CrontabSchedule.Parse(scheduledPoll.Schedule).GetNextOccurrence(DateTime.Now);
 
                 var timeToSleep = nextOccurrence - DateTime.Now;
-            
                 contextLog.Warn($"***Scheduled to {nextOccurrence}, sleep for {timeToSleep}");
                 await Task.Delay(timeToSleep);
                 contextLog.Warn($"***Wake up");
-            
+
                 contextLog.Warn($"***Dict key: {string.Join(",", sendPollTasks.Keys)}");
                 if(sendPollTasks.ContainsKey(scheduledPoll.Id))
                 {
@@ -119,5 +131,7 @@ namespace TelegramInteraction
                 sendPollTasks.Remove(scheduledPoll.Id, out _);
             }
         }
+
+        private ConcurrentDictionary<Guid, Task> sendPollTasks;
     }
 }

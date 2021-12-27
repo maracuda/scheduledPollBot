@@ -50,8 +50,8 @@ namespace TelegramInteraction.Chat
         }
 
         public bool CanHandle(Update update) =>
-            update.Message?.ReplyToMessage != null
-            && update.Message.ReplyToMessage.Text == ChatConstants.GuessOptionsText;
+            update.Message?.ReplyToMessage?.Text != null
+            && update.Message.ReplyToMessage.Text.StartsWith(ChatConstants.GuessOptionsText);
 
         private readonly ICreatePollService createPollService;
         private readonly PollSender pollSender;

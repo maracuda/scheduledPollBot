@@ -21,7 +21,7 @@ namespace TelegramInteraction.Chat
             await telegramBotClient.SendPollAsync(createPollRequest.ChatId,
                                                   createPollRequest.PollName,
                                                   createPollRequest.Options,
-                                                  isAnonymous: createPollRequest.IsAnonymous,
+                                                  createPollRequest.IsAnonymous,
                                                   replyMarkup: new InlineKeyboardMarkup(
                                                       new[]
                                                           {
@@ -31,7 +31,7 @@ namespace TelegramInteraction.Chat
                                                                           {
                                                                               CallbackData = ChatConstants.NameCallback,
                                                                           },
-                                                                      new InlineKeyboardButton("Anonymous")
+                                                                      new InlineKeyboardButton(createPollRequest.IsAnonymous ? "Non-anonymous" : "Anonymous")
                                                                           {
                                                                               CallbackData = ChatConstants.AnonymousCallback,
                                                                           },

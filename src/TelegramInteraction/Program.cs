@@ -5,6 +5,7 @@ using BusinessLogic;
 
 using Vostok.Hosting;
 using Vostok.Hosting.Setup;
+using Vostok.Logging.Abstractions;
 
 namespace TelegramInteraction
 {
@@ -29,7 +30,7 @@ namespace TelegramInteraction
                                                                  .SetEnvironment(GetEnvironment())
                                                                  .SetInstance("first")
                                                                  )
-                    .SetupLog(logBuilder => logBuilder.SetupConsoleLog())
+                    .SetupLog(logBuilder => logBuilder.SetupConsoleLog().CustomizeLog(l => l.WithEventsDroppedBySourceContext("Poll sending scheduler")))
                     .SetPort(port)
                     .DisableClusterConfig()
                     .DisableHercules()

@@ -50,8 +50,6 @@ namespace TelegramInteraction
         )
         {
             var enabledPolls = (await scheduledPollService.FindNotDisabledAsync()).ToArray();
-            log.Warn($"***Enabled polls: {string.Join(",", enabledPolls.Select(p => p.Name))}");
-            log.Warn($"***Tasks in dict: {string.Join(",", sendPollTasks.Keys)}");
 
             foreach(var scheduledPoll in enabledPolls)
             {
@@ -61,6 +59,7 @@ namespace TelegramInteraction
                 }
 
                 var now = DateTime.Now;
+                
                 // 10 секунд должны быть больше чем время запуска шедулера, сейчас это 2 секунды
                 if(CrontabSchedule.Parse(scheduledPoll.Schedule).GetNextOccurrence(now) - now < 10.Seconds())
                 {
@@ -79,7 +78,7 @@ namespace TelegramInteraction
                                                           scheduledPoll.ChatId,
                                                           $"Sorry, can't send poll because of error, developers are know it and will contact you"
                                                       );
-                                                  telegramLogger.Log(t.Exception);
+                                                  telegramLogger.Log(new Exception($"poll id is: {scheduledPoll.Id}", t.Exception));
                                               },
                                           TaskContinuationOptions.OnlyOnFaulted
                             );
@@ -105,14 +104,10 @@ namespace TelegramInteraction
                 var nextOccurrence = CrontabSchedule.Parse(scheduledPoll.Schedule).GetNextOccurrence(DateTime.Now);
 
                 var timeToSleep = nextOccurrence - DateTime.Now;
-                contextLog.Warn($"***Scheduled to {nextOccurrence}, sleep for {timeToSleep}");
                 await Task.Delay(timeToSleep);
-                contextLog.Warn($"***Wake up");
 
-                contextLog.Warn($"***Dict key: {string.Join(",", sendPollTasks.Keys)}");
                 if(sendPollTasks.ContainsKey(scheduledPoll.Id))
                 {
-                    contextLog.Warn($"*** Before poll sendings");
                     await telegramBotClient.SendPollAsync(scheduledPoll.ChatId,
                                                           scheduledPoll.Name,
                                                           scheduledPoll.Options,

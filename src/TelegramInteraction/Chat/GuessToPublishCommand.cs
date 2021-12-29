@@ -43,8 +43,8 @@ namespace TelegramInteraction.Chat
                 
                 var bot = await telegramBotClient.GetMeAsync();
                 
-                await telegramBotClient.SendTextMessageAsync(chatId, $"Well done\r\nCall me @{bot.Username} "
-                                                                     + "in chat where you want to post the poll"
+                await telegramBotClient.SendTextMessageAsync(chatId, $"Well done\r\nAdd me @{bot.Username} "
+                                                                     + "to chat where you want to post the poll"
                                                                      + " and type /schedule command");
                 return;
             }

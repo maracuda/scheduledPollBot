@@ -44,10 +44,10 @@ namespace TelegramInteraction.Chat
 
                 var next3StartTimes = string.Join("\r\n", GetSchedules(DateTime.Now, schedule)
                                                 .Take(3)
-                                                .Select(dt => dt.ToString().Replace(".", "\\.")));
+                                                .Select((dt, index) => $"{index + 1} poll will be at: {dt.ToString().Replace(".", "\\.")}"));
 
                 await telegramBotClient.SendTextMessageAsync(chatId,
-                                                             $"Ok, schedule set up\r\nCheck schedule for next 3 times, TimeZone is *UTC*:\r\n{next3StartTimes}",
+                                                             $"Ok, schedule set up\r\nCheck schedule for next 3 times, TimeZone is *UTC*:\r\n{next3StartTimes}\r\nAnd it will never stop, until you call /stop",
                                                              parseMode: ParseMode.MarkdownV2
                 );
             }

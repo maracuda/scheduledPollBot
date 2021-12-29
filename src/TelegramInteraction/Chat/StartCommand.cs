@@ -2,6 +2,7 @@ using System.Threading.Tasks;
 
 using Telegram.Bot;
 using Telegram.Bot.Types;
+using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.InputFiles;
 
 namespace TelegramInteraction.Chat
@@ -27,7 +28,12 @@ namespace TelegramInteraction.Chat
             );
 
             await telegramBotClient.SendTextMessageAsync(update.Message.Chat.Id,
-                                                         @"It will be send by period, which you have specified"
+                                                         "It will be send by schedule you specified\r\n"
+                                                         + "Examples:\r\n"
+                                                         + "1\\. at 10pm on mondays\r\n"
+                                                         + "2\\. every 5 minutes\r\n"
+                                                         + "3\\. at 4am every day",
+                parseMode:ParseMode.MarkdownV2
             );
             await telegramBotClient.SendPhotoAsync(update.Message.Chat.Id,
                                                    new InputOnlineFile(

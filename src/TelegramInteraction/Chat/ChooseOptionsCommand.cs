@@ -3,6 +3,9 @@ using System.Threading.Tasks;
 
 using BusinessLogic.CreatePolls;
 
+using FluentAssertions;
+using FluentAssertions.Execution;
+
 using Telegram.Bot;
 using Telegram.Bot.Types;
 
@@ -27,7 +30,9 @@ namespace TelegramInteraction.Chat
             var pendingRequest = await createPollService.FindPendingAsync(chatId, update.Message.From.Id);
             if(pendingRequest == null)
             {
-                await telegramBotClient.SendTextMessageAsync(chatId, $"Sorry, there is no poll from you, to create one use /new");
+                await telegramBotClient.SendTextMessageAsync(chatId,
+                                                             $"Sorry, there is no poll from you, to create one use /new"
+                );
                 return;
             }
 
@@ -36,17 +41,34 @@ namespace TelegramInteraction.Chat
                 StringSplitOptions.None
             );
 
-            if(pollOptions.Length >= 2)
+            var validationResult = Validate(pollOptions);
+            if(validationResult.IsSuccess)
             {
                 pendingRequest.Options = pollOptions;
                 await createPollService.SaveAsync(pendingRequest);
             }
             else
             {
-                await telegramBotClient.SendTextMessageAsync(chatId, "Please specify 2 or more options");
+                await telegramBotClient.SendTextMessageAsync(chatId, validationResult.Error);
             }
 
             await pollSender.SendPollAsync(pendingRequest);
+        }
+
+        private static Result<string> Validate(string[] pollOptions)
+        {
+            try
+            {
+                pollOptions.Length.Should().BeGreaterOrEqualTo(2);
+                pollOptions.Should().OnlyContain(o => !string.IsNullOrEmpty(o));
+                pollOptions.Should().OnlyContain(o => o.Length <= 100);
+
+                return Result<string>.Ok();
+            }
+            catch(AssertionFailedException exception)
+            {
+                return Result<string>.Fail(exception.Message);
+            }
         }
 
         public bool CanHandle(Update update) =>

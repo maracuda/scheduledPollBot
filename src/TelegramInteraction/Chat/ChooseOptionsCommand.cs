@@ -3,9 +3,6 @@ using System.Threading.Tasks;
 
 using BusinessLogic.CreatePolls;
 
-using FluentAssertions;
-using FluentAssertions.Execution;
-
 using Telegram.Bot;
 using Telegram.Bot.Types;
 
@@ -15,12 +12,14 @@ namespace TelegramInteraction.Chat
     {
         public ChooseOptionsCommand(ICreatePollService createPollService,
                                     PollSender pollSender,
-                                    ITelegramBotClient telegramBotClient
+                                    ITelegramBotClient telegramBotClient,
+                                    ChooseOptionsValidator chooseOptionsValidator
         )
         {
             this.createPollService = createPollService;
             this.pollSender = pollSender;
             this.telegramBotClient = telegramBotClient;
+            this.chooseOptionsValidator = chooseOptionsValidator;
         }
 
         public async Task ExecuteAsync(Update update)
@@ -41,7 +40,7 @@ namespace TelegramInteraction.Chat
                 StringSplitOptions.None
             );
 
-            var validationResult = Validate(pollOptions);
+            var validationResult = chooseOptionsValidator.Validate(pollOptions);
             if(validationResult.IsSuccess)
             {
                 pendingRequest.Options = pollOptions;
@@ -55,22 +54,6 @@ namespace TelegramInteraction.Chat
             await pollSender.SendPollAsync(pendingRequest);
         }
 
-        private static Result<string> Validate(string[] pollOptions)
-        {
-            try
-            {
-                pollOptions.Length.Should().BeGreaterOrEqualTo(2);
-                pollOptions.Should().OnlyContain(o => !string.IsNullOrEmpty(o));
-                pollOptions.Should().OnlyContain(o => o.Length <= 100);
-
-                return Result<string>.Ok();
-            }
-            catch(AssertionFailedException exception)
-            {
-                return Result<string>.Fail(exception.Message);
-            }
-        }
-
         public bool CanHandle(Update update) =>
             update.Message?.ReplyToMessage?.Text != null
             && update.Message.ReplyToMessage.Text.StartsWith(ChatConstants.GuessOptionsText);
@@ -78,5 +61,6 @@ namespace TelegramInteraction.Chat
         private readonly ICreatePollService createPollService;
         private readonly PollSender pollSender;
         private readonly ITelegramBotClient telegramBotClient;
+        private readonly ChooseOptionsValidator chooseOptionsValidator;
     }
 }

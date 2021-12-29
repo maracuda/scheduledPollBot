@@ -1,24 +1,14 @@
 using FluentAssertions;
-using FluentAssertions.Execution;
 
 namespace TelegramInteraction.Chat
 {
-    public class ChooseOptionsValidator : IValidator<string[]>
+    public class ChooseOptionsValidator : ValidatorBase<string[]>
     {
-        public Result<string> Validate(string[] smth)
+        protected override void ValidateInternal(string[] options)
         {
-            try
-            {
-                smth.Length.Should().BeGreaterOrEqualTo(2);
-                smth.Should().OnlyContain(o => !string.IsNullOrEmpty(o));
-                smth.Should().OnlyContain(o => o.Length <= 100);
-
-                return Result<string>.Ok();
-            }
-            catch(AssertionFailedException exception)
-            {
-                return Result<string>.Fail(exception.Message);
-            }
+            options.Length.Should().BeGreaterOrEqualTo(2);
+            options.Should().OnlyContain(o => !string.IsNullOrEmpty(o));
+            options.Should().OnlyContain(o => o.Length <= 100);
         }
     }
 }

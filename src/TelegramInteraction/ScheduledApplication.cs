@@ -67,7 +67,8 @@ namespace TelegramInteraction
                         Task.Run(() => SendPollAsync(telegramBotClient,
                                                      context,
                                                      scheduledPoll,
-                                                     log
+                                                     log,
+                                                     telegramLogger
                                  )
                             )
                             .ContinueWith(async t =>
@@ -94,7 +95,8 @@ namespace TelegramInteraction
         }
 
         private async Task SendPollAsync(ITelegramBotClient telegramBotClient,
-                                         IScheduledActionContext context, ScheduledPoll scheduledPoll, ILog log
+                                         IScheduledActionContext context, ScheduledPoll scheduledPoll, ILog log,
+                                         ITelegramLogger telegramLogger
         )
         {
             try
@@ -120,6 +122,10 @@ namespace TelegramInteraction
                 {
                     contextLog.Warn("***Sending was cancelled");
                 }
+            }
+            catch(Exception ex)
+            {
+                telegramLogger.Log(new Exception($"poll id is: {scheduledPoll.Id}", ex));
             }
             finally
             {

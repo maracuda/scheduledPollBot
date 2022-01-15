@@ -2,6 +2,7 @@ new - create new scheduled poll
 schedule - add poll to group and start send poll by schedule
 stop - stop sending poll by schedule
 feedback - send a feedback to developers
+donate - thanks for your happiness
 
 # id картинки с опросом
 AgACAgIAAxkBAANQYcdcL6r8D8f5WMTU4Q7NHRRafUcAAi26MRtMLkBKog710sE10ccBAAMCAANtAAMjBA

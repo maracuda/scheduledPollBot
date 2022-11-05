@@ -51,6 +51,7 @@ namespace TelegramInteraction.Chat
                         Name = pendingRequest.PollName,
                         Schedule = pendingRequest.Schedule,
                         ChatId = update.Message.Chat.Id,
+                        AllowsMultipleAnswers = pendingRequest.AllowsMultipleAnswers,
                     }
             );
 

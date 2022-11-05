@@ -14,5 +14,6 @@ namespace BusinessLogic
         public string Schedule { get; set; }
         public long ChatId { get; set; }
         public bool IsDisabled { get; set; }
+        public bool AllowsMultipleAnswers { get; set; }
     }
 }

@@ -22,6 +22,7 @@ namespace TelegramInteraction.Chat
                                                   createPollRequest.PollName,
                                                   createPollRequest.Options,
                                                   createPollRequest.IsAnonymous,
+                                                  allowsMultipleAnswers: createPollRequest.AllowsMultipleAnswers,
                                                   replyMarkup: new InlineKeyboardMarkup(
                                                       new[]
                                                           {
@@ -34,6 +35,13 @@ namespace TelegramInteraction.Chat
                                                                       new InlineKeyboardButton(createPollRequest.IsAnonymous ? "Non-anonymous" : "Anonymous")
                                                                           {
                                                                               CallbackData = ChatConstants.AnonymousCallback,
+                                                                          },
+                                                                  },
+                                                              new []
+                                                                  {
+                                                                      new InlineKeyboardButton(createPollRequest.AllowsMultipleAnswers ? "Multiple answers" : "Single answer")
+                                                                          {
+                                                                              CallbackData = ChatConstants.MultipleCallback,
                                                                           },
                                                                   },
                                                               new[]

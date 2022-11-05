@@ -43,6 +43,7 @@ namespace TelegramInteraction.Chat
                     IsPending = true,
                     Id = Guid.NewGuid(),
                     IsValid = false,
+                    AllowsMultipleAnswers = false,
                 };
             await createPollService.CreateAsync(createPollRequest);
 

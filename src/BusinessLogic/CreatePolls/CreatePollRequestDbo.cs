@@ -18,5 +18,6 @@ namespace BusinessLogic.CreatePolls
         public string[] Options { get; set; }
         public string Schedule { get; set; }
         public bool IsValid { get; set; }
+        public bool AllowsMultipleAnswers { get; set; }
     }
 }

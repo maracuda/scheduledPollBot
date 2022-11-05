@@ -59,7 +59,7 @@ namespace TelegramInteraction
                 }
 
                 var now = DateTime.Now;
-                
+
                 // 10 секунд должны быть больше чем время запуска шедулера, сейчас это 2 секунды
                 if(CrontabSchedule.Parse(scheduledPoll.Schedule).GetNextOccurrence(now) - now < 10.Seconds())
                 {
@@ -79,7 +79,9 @@ namespace TelegramInteraction
                                                           scheduledPoll.ChatId,
                                                           $"Sorry, can't send poll because of error, developers are know it and will contact you"
                                                       );
-                                                  telegramLogger.Log(new Exception($"poll id is: {scheduledPoll.Id}", t.Exception));
+                                                  telegramLogger.Log(
+                                                      new Exception($"poll id is: {scheduledPoll.Id}", t.Exception)
+                                                  );
                                               },
                                           TaskContinuationOptions.OnlyOnFaulted
                             );
@@ -114,7 +116,8 @@ namespace TelegramInteraction
                                                           scheduledPoll.Name,
                                                           scheduledPoll.Options,
                                                           isAnonymous: scheduledPoll.IsAnonymous,
-                                                          cancellationToken: context.CancellationToken
+                                                          cancellationToken: context.CancellationToken,
+                                                          allowsMultipleAnswers: scheduledPoll.AllowsMultipleAnswers
                     );
                     contextLog.Warn("***Message was sent");
                 }

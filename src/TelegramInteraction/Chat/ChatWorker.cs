@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
 
 using Telegram.Bot;
+using Telegram.Bot.Exceptions;
 using Telegram.Bot.Extensions.Polling;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
@@ -45,10 +47,14 @@ namespace TelegramInteraction.Chat
             log.Info($"Start listening for @{me.Username}");
         }
 
-        private Task ErrorHandler(ITelegramBotClient arg1, Exception arg2, CancellationToken arg3)
+        private Task ErrorHandler(ITelegramBotClient arg1, Exception exception, CancellationToken arg3)
         {
-            log.Error(arg2);
-            telegramLogger.Log(arg2);
+            log.Error(exception);
+
+            if(exception is not ApiRequestException && exception is not SocketException)
+            {
+                telegramLogger.Log(exception);
+            }
 
             return Task.CompletedTask;
         }

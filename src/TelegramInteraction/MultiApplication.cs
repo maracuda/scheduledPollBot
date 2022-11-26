@@ -60,6 +60,7 @@ namespace TelegramInteraction
             var applicationSettings = ApplicationSettingsProvider.Get(environment.ApplicationIdentity.Environment);
             container.RegisterInstance(applicationSettings);
             container.ConfigureTelegramClient(applicationSettings);
+            container.ConfigureYandexAws(applicationSettings);
 
             container.Register<ChatWorker>();
             container.Register<IPublishRequestValidator, PublishRequestValidator>(Lifestyle.Singleton);
@@ -67,12 +68,13 @@ namespace TelegramInteraction
             container.Register<PollSender>(Lifestyle.Singleton);
             container.Register<ChooseOptionsValidator>(Lifestyle.Singleton);
             container.Register<ChooseNameValidator>(Lifestyle.Singleton);
+            container.Register<IS3ClientWrapper, S3ClientWrapper>(Lifestyle.Singleton);
             
-            container.Register<ICreatePollRepository, CreatePollRepository>(Lifestyle.Singleton);
+            container.Register<ICreatePollRepository, S3CreatePollRepository>(Lifestyle.Singleton);
             container.Register<IPollContextFactory, PollContextFactory>(Lifestyle.Singleton);
             
             container.Register<IScheduledPollService, ScheduledPollService>(Lifestyle.Singleton);
-            container.Register<IScheduledPollRepository, ScheduledPollRepository>(Lifestyle.Singleton);
+            container.Register<IScheduledPollRepository, S3ScheduledPollRepository>(Lifestyle.Singleton);
 
             container.RegisterInstance(environment.Log);
 

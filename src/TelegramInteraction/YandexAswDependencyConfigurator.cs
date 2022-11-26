@@ -9,7 +9,7 @@ namespace TelegramInteraction;
 
 public static class YandexAswDependencyConfigurator
 {
-    public static void Configure(this Container container, IApplicationSettings settings
+    public static void ConfigureYandexAws(this Container container, IApplicationSettings settings
     )
     {
         var accessKey = settings.GetString("AwsAccessKey");

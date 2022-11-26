@@ -15,13 +15,15 @@ namespace BusinessLogic.CreatePolls;
 public class S3ClientWrapper : IS3ClientWrapper
 {
     public S3ClientWrapper(
-        IAmazonS3 yandexAws
+        IAmazonS3 yandexAws,
+        IApplicationSettings applicationSettings
     )
     {
+        bucketName = applicationSettings.GetString("BucketName");
         this.yandexAws = yandexAws;
     }
 
-    public async Task<TItem[]> ReadAllAsync<TItem>(string bucketName, string key)
+    public async Task<TItem[]> ReadAllAsync<TItem>(string key)
     {
         var allObjects = await yandexAws.ListObjectsAsync(bucketName);
         if(allObjects.HttpStatusCode != HttpStatusCode.OK)
@@ -47,7 +49,7 @@ public class S3ClientWrapper : IS3ClientWrapper
         throw new Exception($"Can't read object {key} in bucket {bucketName}");
     }
 
-    public Task WriteAsync<TItem>(TItem[] values, string bucketName, string key)
+    public Task WriteAsync<TItem>(TItem[] values, string key)
     {
         lock(locker)
         {
@@ -66,4 +68,5 @@ public class S3ClientWrapper : IS3ClientWrapper
 
     private volatile object locker = new();
     private readonly IAmazonS3 yandexAws;
+    private readonly string bucketName;
 }

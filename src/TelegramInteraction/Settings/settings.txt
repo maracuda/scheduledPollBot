@@ -1,3 +1,6 @@
 ﻿BotToken = <cens>
-ChatId = <cens>
-Schedule = */1 * * * *
+AwsAccessKey = <cens>
+AwsSecretKey = <cens>
+AdminChatId = <cens>
+PORT = 80
+BucketName = testpolls

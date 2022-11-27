@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-using BusinessLogic;
-
 using Vostok.Hosting;
 using Vostok.Hosting.Setup;
 using Vostok.Logging.Abstractions;
@@ -24,12 +22,6 @@ namespace TelegramInteraction
             void EnvironmentSetup(IVostokHostingEnvironmentBuilder builder)
             {
                 builder
-                    .SetupApplicationIdentity(identityBuilder => identityBuilder
-                                                                 .SetProject("MyProject")
-                                                                 .SetApplication("MyApplication")
-                                                                 .SetEnvironment(GetEnvironment())
-                                                                 .SetInstance("first")
-                                                                 )
                     .SetupLog(logBuilder => logBuilder.SetupConsoleLog().CustomizeLog(l => l.WithEventsDroppedBySourceContext("Poll sending scheduler")))
                     .SetPort(port)
                     .DisableClusterConfig()
@@ -43,11 +35,6 @@ namespace TelegramInteraction
             var host = new VostokHost(hostSettings);
 
             await host.WithConsoleCancellation().RunAsync();
-        }
-
-        private static string GetEnvironment()
-        {
-            return Environment.CurrentDirectory.Contains("heroku") ? EnvironmentType.Production : EnvironmentType.Develop;
         }
     }
 }

@@ -4,7 +4,7 @@
     {
         public static IApplicationSettings Get(string applicationIdentityEnvironment)
         {
-            if(applicationIdentityEnvironment == EnvironmentType.Production)
+            if(applicationIdentityEnvironment == EnvironmentType.Container)
             {
                 return new HerokuApplicationSettings();
             }

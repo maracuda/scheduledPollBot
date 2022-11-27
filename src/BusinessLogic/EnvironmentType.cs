@@ -2,7 +2,7 @@
 {
     public class EnvironmentType
     {
-        public static string Production = "production";
-        public static string Develop = "develop";
+        public static string Container = "Container";
+        public static string Local = "Local";
     }
 }

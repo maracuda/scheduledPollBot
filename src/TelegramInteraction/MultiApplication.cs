@@ -78,7 +78,7 @@ namespace TelegramInteraction
 
             container.RegisterInstance(environment.Log);
 
-            if(environment.ApplicationIdentity.Environment == EnvironmentType.Production)
+            if(environment.ApplicationIdentity.Environment == EnvironmentType.Container)
             {
                 container.Register<ISportGroupRepository, HardCodedSportGroupRepository>();
             }

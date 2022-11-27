@@ -13,4 +13,8 @@ RUN dotnet publish -c Release -o out TelegramInteraction/TelegramInteraction.csp
 FROM mcr.microsoft.com/dotnet/aspnet:6.0
 WORKDIR /app
 COPY --from=build-env /app/out .
+ENV PORT=10000
+ENV VOSTOK_IDENTITY_PROJECT=PollBot
+ENV VOSTOK_IDENTITY_APPLICATION=PollBot
+ENV VOSTOK_IDENTITY_INSTANCE=1
 ENTRYPOINT ["dotnet", "TelegramInteraction.dll"]

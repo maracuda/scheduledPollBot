@@ -84,7 +84,7 @@ namespace TelegramInteraction.Chat
         }
 
         public bool CanHandle(Update update) =>
-            update.Message?.ReplyToMessage != null
+            update.Message?.ReplyToMessage?.Text != null 
             && update.Message.ReplyToMessage.Text.StartsWith(ChatConstants.GuessScheduleText);
 
         private readonly ITelegramBotClient telegramBotClient;

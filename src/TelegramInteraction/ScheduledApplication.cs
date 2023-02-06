@@ -11,6 +11,7 @@ using NCrontab;
 using SimpleInjector;
 
 using Telegram.Bot;
+using Telegram.Bot.Exceptions;
 
 using TelegramInteraction.Chat;
 
@@ -29,14 +30,13 @@ namespace TelegramInteraction
             var container = environment.HostExtensions.Get<Container>();
 
             var telegramBotClient = container.GetInstance<ITelegramBotClient>();
-            var scheduledPollService = container.GetInstance<IScheduledPollService>();
+            scheduledPollService = container.GetInstance<IScheduledPollService>();
             var telegramLogger = container.GetInstance<ITelegramLogger>();
             var log = container.GetInstance<ILog>();
 
             builder.Schedule("Poll sending scheduler",
                              Scheduler.Periodical(2.Seconds()),
-                             context => ScheduleTasks(scheduledPollService,
-                                                      telegramBotClient,
+                             context => ScheduleTasks(telegramBotClient,
                                                       context,
                                                       log,
                                                       telegramLogger
@@ -44,8 +44,7 @@ namespace TelegramInteraction
             );
         }
 
-        private async Task ScheduleTasks(IScheduledPollService scheduledPollService,
-                                         ITelegramBotClient telegramBotClient,
+        private async Task ScheduleTasks(ITelegramBotClient telegramBotClient,
                                          IScheduledActionContext context, ILog log, ITelegramLogger telegramLogger
         )
         {
@@ -126,6 +125,19 @@ namespace TelegramInteraction
                     contextLog.Warn("***Sending was cancelled");
                 }
             }
+            catch(ApiRequestException apiRequestException)
+            {
+                if(apiRequestException.Message.Contains("Forbidden: bot was kicked from the group chat"))
+                {
+                    var poll = await scheduledPollService.ReadAsync(scheduledPoll.Id);
+                    poll.IsDisabled = true;
+                    await scheduledPollService.SaveAsync(poll);
+                }
+                else
+                {
+                    throw;
+                }
+            }
             catch(Exception ex)
             {
                 telegramLogger.Log(new Exception($"poll id is: {scheduledPoll.Id}", ex));
@@ -137,5 +149,6 @@ namespace TelegramInteraction
         }
 
         private ConcurrentDictionary<Guid, Task> sendPollTasks;
+        private IScheduledPollService scheduledPollService;
     }
 }

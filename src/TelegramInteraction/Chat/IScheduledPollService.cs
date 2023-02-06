@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 
 namespace TelegramInteraction.Chat
@@ -8,5 +9,6 @@ namespace TelegramInteraction.Chat
         Task<ScheduledPoll[]> FindNotDisabledAsync();
         Task<ScheduledPoll[]> GetAll(long chatId);
         Task SaveAsync(ScheduledPoll poll);
+        Task<ScheduledPoll> ReadAsync(Guid pollId);
     }
 }

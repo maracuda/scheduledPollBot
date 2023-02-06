@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -45,6 +46,14 @@ namespace TelegramInteraction.Chat
             await using var context = pollContextFactory.Create();
 
             return await context.Polls.Where(p => !p.IsDisabled).ToArrayAsync();
+        }
+
+        public async Task<ScheduledPollDbo> ReadAsync(Guid pollId)
+        {
+            await using var context = pollContextFactory.Create();
+
+            var scheduledPollDbos = await context.Polls.Where(p => p.Id == pollId).ToArrayAsync();
+            return scheduledPollDbos.FirstOrDefault();
         }
     }
 }

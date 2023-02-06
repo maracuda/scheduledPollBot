@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 
 using BusinessLogic;
@@ -10,5 +11,6 @@ namespace TelegramInteraction.Chat
         Task<ScheduledPollDbo[]> FindAsync(long chatId);
         Task SaveAsync(ScheduledPollDbo poll);
         Task<ScheduledPollDbo[]> FindNotDisabledAsync();
+        Task<ScheduledPollDbo> ReadAsync(Guid pollId);
     }
 }

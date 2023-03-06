@@ -25,22 +25,24 @@ namespace TelegramInteraction.Chat
                 );
                 return;
             }
-            
+
             var pollsInGroup = await scheduledPollService.GetAll(update.Message.Chat.Id);
             var activePoll = pollsInGroup.FirstOrDefault(p => !p.IsDisabled);
-            
+
             if(activePoll != null)
             {
                 activePoll.IsDisabled = true;
                 await scheduledPollService.SaveAsync(activePoll);
 
-                await telegramBotClient.SendTextMessageAsync(update.Message.Chat.Id, $"Poll *{activePoll.Name}* was stopped"
-                                                                 + "\r\n To start polling again create a poll by /new command",
-                    ParseMode.MarkdownV2);
+                await telegramBotClient.SendTextMessageAsync(update.Message.Chat.Id,
+                                                             $"Poll {activePoll.Name} was stopped"
+                );
             }
             else
             {
-                await telegramBotClient.SendTextMessageAsync(update.Message.Chat.Id, "I can't find any active poll here");
+                await telegramBotClient.SendTextMessageAsync(update.Message.Chat.Id,
+                                                             "I can't find any active poll here"
+                );
             }
         }
 

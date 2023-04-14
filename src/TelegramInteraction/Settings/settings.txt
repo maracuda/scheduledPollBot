@@ -1,3 +1,3 @@
-﻿BotToken = <cens>
-ChatId = <cens>
+﻿BotToken = 1896049214:AAFKNRj9_1aDGDiH49Zj95GO8a2fQrHoFrI
+AdminChatId = -748675065
 Schedule = */1 * * * *

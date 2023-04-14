@@ -29,9 +29,10 @@ namespace TelegramInteraction.Chat
         {
             const int maxMessageLength = 4095;
             var chatId = long.Parse(applicationSettings.GetString("AdminChatId"));
-            
+
             log.Error(exception);
-            telegramBotClient.SendTextMessageAsync(chatId, $"Error in bot\r\n{exception}".Substring(0, Math.Min(maxMessageLength, exception.ToString().Length)));
+            var message = $"Error in bot\r\nlength:{exception.ToString().Length}\r\n{exception}";
+            telegramBotClient.SendTextMessageAsync(chatId, message.Substring(0, Math.Min(maxMessageLength, message.Length)));
         }
     }
 }

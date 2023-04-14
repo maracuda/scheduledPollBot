@@ -17,7 +17,7 @@ namespace BusinessLogic
                 throw new Exception($"Variable {name} not found in json file");
             }
 
-            return firstOrDefault.Split("==", StringSplitOptions.RemoveEmptyEntries).Last().Trim();
+            return firstOrDefault.Split(new [] {"==", "="}, StringSplitOptions.RemoveEmptyEntries).Last().Trim();
         }
     }
 }

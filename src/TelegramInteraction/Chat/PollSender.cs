@@ -28,36 +28,40 @@ namespace TelegramInteraction.Chat
                                                           {
                                                               new[]
                                                                   {
-                                                                      new InlineKeyboardButton("Name")
+                                                                      new InlineKeyboardButton("Имя опроса")
                                                                           {
                                                                               CallbackData = ChatConstants.NameCallback,
                                                                           },
-                                                                      new InlineKeyboardButton(createPollRequest.IsAnonymous ? "Non-anonymous" : "Anonymous")
+                                                                      new InlineKeyboardButton(createPollRequest.IsAnonymous ? "Сделать неанонимным" : "Сделать анонимным")
                                                                           {
                                                                               CallbackData = ChatConstants.AnonymousCallback,
                                                                           },
                                                                   },
                                                               new []
                                                                   {
-                                                                      new InlineKeyboardButton(createPollRequest.AllowsMultipleAnswers ? "Multiple answers" : "Single answer")
+                                                                      new InlineKeyboardButton(
+                                                                          createPollRequest.AllowsMultipleAnswers
+                                                                              ? "Разрешить единственный выбор"
+                                                                              : "Разрешить множественный выбор"
+                                                                      )
                                                                           {
                                                                               CallbackData = ChatConstants.MultipleCallback,
                                                                           },
                                                                   },
                                                               new[]
                                                                   {
-                                                                      new InlineKeyboardButton("Options")
+                                                                      new InlineKeyboardButton("Ответы")
                                                                           {
                                                                               CallbackData = ChatConstants.OptionsCallback,
                                                                           },
-                                                                      new InlineKeyboardButton("Schedule")
+                                                                      new InlineKeyboardButton("Расписание")
                                                                           {
                                                                               CallbackData = ChatConstants.ScheduleCallback,
                                                                           },
                                                                   },
                                                               new[]
                                                                   {
-                                                                      new InlineKeyboardButton("Publish")
+                                                                      new InlineKeyboardButton("Жми сюда когда всё готово!")
                                                                           {
                                                                               CallbackData = ChatConstants.PublishCallback,
                                                                           },

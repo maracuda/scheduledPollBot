@@ -20,7 +20,7 @@ namespace TelegramInteraction.Chat
         {
             var chatId = update.CallbackQuery.Message.Chat.Id;
 
-            await telegramBotClient.SendTextMessageAsync(chatId, ChatConstants.GuessScheduleText + " in [cron](https://crontab.guru/) format\r\nExample: `0 10 * * 5` means At 10:00 on Friday", replyMarkup:new ForceReplyMarkup(),
+            await telegramBotClient.SendTextMessageAsync(chatId, ChatConstants.GuessScheduleText + " in [cron](https://crontab.guru/) format.\r\nUse UTC time from [here](https://www.utctime.net/)\r\nExample: `0 10 * * 5` means At 10:00 on Friday", replyMarkup:new ForceReplyMarkup(),
                 parseMode: ParseMode.MarkdownV2);
         }
 

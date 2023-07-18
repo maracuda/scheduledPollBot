@@ -42,7 +42,7 @@ namespace TelegramInteraction.Chat
             );
 
             await telegramBotClient.SendTextMessageAsync(update.Message.Chat.Id,
-                                                         "Если что-то непонятно, то читай [инструкцию](https://vc.ru/tribuna/347133-bot-dlya-regulyarnyh-oprosov)",
+                                                         "Если что-то непонятно, то читай [инструкцию](https://vc.ru/tribuna/347133-bot-dlya-regulyarnyh-oprosov) и используй /feedback",
                                                          ParseMode.Markdown
             );
 

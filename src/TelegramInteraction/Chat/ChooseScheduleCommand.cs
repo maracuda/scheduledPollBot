@@ -42,7 +42,7 @@ namespace TelegramInteraction.Chat
                 pendingRequest.Schedule = schedule.ToString();
                 await createPollService.SaveAsync(pendingRequest);
 
-                var next3StartTimes = string.Join("\r\n", GetSchedules(DateTime.Now, schedule)
+                var next3StartTimes = string.Join("\r\n", GetSchedules(DateTime.UtcNow, schedule)
                                                 .Take(3)
                                                 .Select((dt, index) => $"{index + 1} poll will be at: {dt.ToString().Replace(".", "\\.")}"));
 

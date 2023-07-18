@@ -59,7 +59,7 @@ namespace TelegramInteraction.Chat
             await createPollService.SaveAsync(pendingRequest);
 
             var nextOccurrence = CrontabSchedule.Parse(pendingRequest.Schedule)
-                                                .GetNextOccurrence(DateTime.Now)
+                                                .GetNextOccurrence(DateTime.UtcNow)
                                                 .ToString()
                                                 .Replace(".", "\\.");
             await telegramBotClient.SendTextMessageAsync(update.Message.Chat.Id,

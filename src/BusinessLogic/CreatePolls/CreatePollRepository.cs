@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -33,6 +34,13 @@ namespace BusinessLogic.CreatePolls
         {
             await using var pollsContext = pollContextFactory.Create();
             var dbos = await pollsContext.Requests.Where(p => p.UserId == userId).ToArrayAsync();
+            return mapper.Map<CreatePollRequest[]>(dbos);
+        }
+
+        public async Task<CreatePollRequest[]> ReadManyAsync(Guid[] ids)
+        {
+            await using var pollsContext = pollContextFactory.Create();
+            var dbos = await pollsContext.Requests.Where(p => ids.Contains(p.Id)).ToArrayAsync();
             return mapper.Map<CreatePollRequest[]>(dbos);
         }
 

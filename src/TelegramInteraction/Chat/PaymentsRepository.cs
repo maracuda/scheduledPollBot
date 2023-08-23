@@ -21,9 +21,9 @@ public class PaymentsRepository : IPaymentsRepository
         var paymentDbos = pollContextFactory.Create().Payments;
 
         var payments = await paymentDbos
-                             .Where(p => chatIds.Contains(p.ChatId) && p.Date < DateTime.Now)
+                             .Where(p => chatIds.Contains(p.ChatId))
                              .ToArrayAsync();
-        return payments.Where(p => DateTime.Now < CalculateEndDate(p)).ToArray();
+        return payments.Where(p => p.Date < DateTime.Now && DateTime.Now < CalculateEndDate(p)).ToArray();
     }
 
     private static DateTime CalculateEndDate(PaymentDbo p)

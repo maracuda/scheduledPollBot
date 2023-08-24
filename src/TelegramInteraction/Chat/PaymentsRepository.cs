@@ -26,6 +26,16 @@ public class PaymentsRepository : IPaymentsRepository
         return payments.Where(p => p.Date < DateTime.Now && DateTime.Now < CalculateEndDate(p)).ToArray();
     }
 
+    public async Task CreateAsync(PaymentDbo paymentDbo)
+    {
+        var pollsContext = pollContextFactory.Create();
+        var paymentDbos = pollsContext.Payments;
+
+        await paymentDbos.AddAsync(paymentDbo);
+
+        await pollsContext.SaveChangesAsync();
+    }
+
     private static DateTime CalculateEndDate(PaymentDbo p)
     {
         switch(p.Period)

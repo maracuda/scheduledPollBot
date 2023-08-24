@@ -18,7 +18,7 @@ public class DisablePollCommand : IChatCommand
 
     public async Task ExecuteAsync(Update update)
     {
-        var chatId = long.Parse(update.Message.Text.Remove(0, "/disable".Length));
+        var chatId = -long.Parse(update.Message.Text.Remove(0, "/disable".Length));
 
         var polls = await scheduledPollRepository.FindAsync(chatId);
         foreach(var poll in polls)

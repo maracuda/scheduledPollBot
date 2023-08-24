@@ -21,7 +21,7 @@ public class AddPaymentCommand : IChatCommand
 
     public async Task ExecuteAsync(Update update)
     {
-        var chatId = long.Parse(update.Message.Text.Remove(0, "/payforever".Length));
+        var chatId = -long.Parse(update.Message.Text.Remove(0, "/payforever".Length));
 
         await paymentsRepository.CreateAsync(new PaymentDbo()
                 {

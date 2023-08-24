@@ -23,7 +23,7 @@ public class PaymentsRepository : IPaymentsRepository
         var payments = await paymentDbos
                              .Where(p => chatIds.Contains(p.ChatId))
                              .ToArrayAsync();
-        return payments.Where(p => p.Date < DateTime.Now && DateTime.Now < CalculateEndDate(p)).ToArray();
+        return payments.Where(p => p.Date < DateTime.UtcNow && DateTime.UtcNow < CalculateEndDate(p)).ToArray();
     }
 
     public async Task CreateAsync(PaymentDbo paymentDbo)

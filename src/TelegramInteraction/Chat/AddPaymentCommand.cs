@@ -28,7 +28,7 @@ public class AddPaymentCommand : IChatCommand
                     ChatId = chatId,
                     Id = Guid.NewGuid(),
                     Amount = 99999,
-                    Date = DateTime.Now,
+                    Date = DateTime.UtcNow,
                     Period = PeriodType.Year,
                     PeriodsCount = 100,
                 }

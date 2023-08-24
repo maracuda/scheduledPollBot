@@ -41,6 +41,14 @@ namespace TelegramInteraction.Chat
             await context.SaveChangesAsync();
         }
 
+        public async Task SaveAsync(ScheduledPollDbo[] polls)
+        {
+            await using var context = pollContextFactory.Create();
+
+            context.Polls.UpdateRange(polls);
+            await context.SaveChangesAsync();
+        }
+
         public async Task<ScheduledPollDbo[]> FindNotDisabledAsync()
         {
             await using var context = pollContextFactory.Create();

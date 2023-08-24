@@ -30,19 +30,24 @@ public class FindUnpaidChatsCommand : IChatCommand
         var requests =
             await createPollRepository.ReadManyAsync(notDisabledPolls.Select(p => p.CreatedRequestId).ToArray());
         var activePaymentChatIds =
-            (await paymentsRepository.SearchActiveAsync(notDisabledPolls.Select(p => p.ChatId).ToArray()))
+            (await paymentsRepository.SearchActiveAsync(notDisabledPolls.Select(p => p.ChatId).Distinct().ToArray()))
             .Select(p => p.ChatId)
             .ToHashSet();
         var requestToChat = notDisabledPolls.ToDictionary(p => p.CreatedRequestId, p => p.ChatId);
 
         var activeRequests = requests.Where(r => r.CreateAt < DateTime.Now.AddDays(-60))
+                                     .DistinctBy(r => r.ChatId)
                                      .Where(r => !activePaymentChatIds.Contains(r.ChatId))
                                      .ToArray();
+
         var unpaidLines = string.Join("\r\n",
                                       activeRequests
                                           .Select(
                                               r =>
-                                                  $"ChatId:  {requestToChat[r.Id]}\tMonths: {Math.Round((DateTime.Now - r.CreateAt).TotalDays / 30, 1)}"
+                                                  $"{requestToChat[r.Id]}"
+                                                  + $"\tMonths: {Math.Round((DateTime.Now - r.CreateAt).TotalDays / 30, 1)}"
+                                                  + $"\t/disable{requestToChat[r.Id]}"
+                                                  + $"\t/pay{requestToChat[r.Id]}"
                                           )
         );
 

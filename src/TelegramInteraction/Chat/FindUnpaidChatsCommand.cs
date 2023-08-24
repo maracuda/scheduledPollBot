@@ -33,15 +33,15 @@ public class FindUnpaidChatsCommand : IChatCommand
             (await paymentsRepository.SearchActiveAsync(notDisabledPolls.Select(p => p.ChatId).Distinct().ToArray()))
             .Select(p => p.ChatId)
             .ToHashSet();
-        var requestToChat = notDisabledPolls.ToDictionary(p => p.CreatedRequestId, p => p.ChatId);
 
-        var activeRequests = requests.Where(r => r.CreateAt < DateTime.Now.AddDays(-60))
-                                     .DistinctBy(r => r.ChatId)
-                                     .Where(r => !activePaymentChatIds.Contains(r.ChatId))
-                                     .ToArray();
+        var requestToChat = notDisabledPolls.ToDictionary(p => p.CreatedRequestId, p => p.ChatId);
+        var activeUnpaidRequests = requests.Where(r => r.CreateAt < DateTime.Now.AddDays(-60))
+                                           .DistinctBy(r => requestToChat[r.Id])
+                                           .Where(r => !activePaymentChatIds.Contains(requestToChat[r.Id]))
+                                           .ToArray();
 
         var unpaidLines = string.Join("\r\n",
-                                      activeRequests
+                                      activeUnpaidRequests
                                           .Select(
                                               r =>
                                                   $"{requestToChat[r.Id]}"
@@ -51,7 +51,7 @@ public class FindUnpaidChatsCommand : IChatCommand
                                           )
         );
 
-        unpaidLines += $"\r\nTotal: {activeRequests.Length}";
+        unpaidLines += $"\r\nTotal: {activeUnpaidRequests.Length}";
 
         await telegramBotClient.SendTextMessageAsync(update.Message!.Chat.Id, unpaidLines);
     }

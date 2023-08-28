@@ -28,10 +28,8 @@ public class DisablePollCommand : IChatCommand
 
         await scheduledPollRepository.SaveAsync(polls);
 
-        var chat = await telegramBotClient.GetChatAsync(chatId);
         await telegramBotClient.SendTextMessageAsync(update.Message.Chat.Id,
-                                                     $"Все опросы в чате {chat.Title} выключены"
-        );
+                                                     $"Все опросы в чате {chatId} выключены");
     }
 
     public bool CanHandle(Update update) =>

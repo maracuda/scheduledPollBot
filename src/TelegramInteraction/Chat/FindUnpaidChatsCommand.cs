@@ -44,10 +44,20 @@ public class FindUnpaidChatsCommand : IChatCommand
         var chatNames = notDisabledPolls.Select(p => p.ChatId)
                                         .Distinct()
                                         .ToDictionary(chatId => chatId,
-                                                      chatId => telegramBotClient.GetChatAsync(chatId)
-                                                          .GetAwaiter()
-                                                          .GetResult()
-                                                          .Title
+                                                      chatId =>
+                                                          {
+                                                              try
+                                                              {
+                                                                  return telegramBotClient.GetChatAsync(chatId)
+                                                                      .GetAwaiter()
+                                                                      .GetResult()
+                                                                      .Title;
+                                                              }
+                                                              catch(Exception)
+                                                              {
+                                                                  return "Чат не найден";
+                                                              }
+                                                          }
                                         );
 
         var unpaidLines = string.Join("\r\n",

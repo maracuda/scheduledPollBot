@@ -34,17 +34,27 @@ public class FindUnpaidChatsCommand : IChatCommand
             .Select(p => p.ChatId)
             .ToHashSet();
 
+        // todo положить в опросы дату старта, чтобы не тащить из запросов на создание
         var requestToChat = notDisabledPolls.ToDictionary(p => p.CreatedRequestId, p => p.ChatId);
         var activeUnpaidRequests = requests.Where(r => r.CreateAt < DateTime.Now.AddDays(-60))
                                            .DistinctBy(r => requestToChat[r.Id])
                                            .Where(r => !activePaymentChatIds.Contains(requestToChat[r.Id]))
                                            .ToArray();
 
+        var chatNames = notDisabledPolls.Select(p => p.ChatId)
+                                        .Distinct()
+                                        .ToDictionary(chatId => chatId,
+                                                      chatId => telegramBotClient.GetChatAsync(chatId)
+                                                          .GetAwaiter()
+                                                          .GetResult()
+                                                          .Title
+                                        );
+
         var unpaidLines = string.Join("\r\n",
                                       activeUnpaidRequests
                                           .Select(
                                               r =>
-                                                  $"{requestToChat[r.Id]}"
+                                                  $"{chatNames[requestToChat[r.Id]]}"
                                                   + $"\tMonths: {Math.Round((DateTime.Now - r.CreateAt).TotalDays / 30, 1)}"
                                                   + $"\t/disable{-requestToChat[r.Id]}"
                                                   + $"\t/payforever{-requestToChat[r.Id]}"

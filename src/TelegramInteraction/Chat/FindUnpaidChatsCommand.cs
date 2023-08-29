@@ -68,6 +68,7 @@ public class FindUnpaidChatsCommand : IChatCommand
                                                   + $"\tMonths: {Math.Round((DateTime.Now - r.CreateAt).TotalDays / 30, 1)}"
                                                   + $"\t/disable{-requestToChat[r.Id]}"
                                                   + $"\t/payforever{-requestToChat[r.Id]}"
+                                                  + $"\t/payforMonth{-requestToChat[r.Id]}"
                                           )
         );
 

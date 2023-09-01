@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 
 using Telegram.Bot;
 using Telegram.Bot.Types;
@@ -20,7 +21,8 @@ public class DisablePollCommand : IChatCommand
     {
         var chatId = -long.Parse(update.Message.Text.Remove(0, "/disable".Length));
 
-        var polls = await scheduledPollRepository.FindAsync(chatId);
+        var polls = (await scheduledPollRepository.FindAsync(chatId)).Where(p => !p.IsDisabled)
+                                                                     .ToArray();
         foreach(var poll in polls)
         {
             poll.IsDisabled = true;
@@ -28,6 +30,9 @@ public class DisablePollCommand : IChatCommand
 
         await scheduledPollRepository.SaveAsync(polls);
 
+        await telegramBotClient.SendTextMessageAsync(update.Message.Chat.Id,
+                                                     string.Join("\r\n", polls.Select(p => $"/enable{p.Id}"))
+        );
         await telegramBotClient.SendTextMessageAsync(update.Message.Chat.Id,
                                                      $"Все опросы в чате {chatId} выключены");
     }

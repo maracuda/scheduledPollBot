@@ -19,15 +19,15 @@ public class EnablePollCommand : IChatCommand
 
     public async Task ExecuteAsync(Update update)
     {
-        var chatId = Guid.Parse(update.Message.Text.Remove(0, "/enable".Length));
+        var pollId = Guid.Parse(update.Message.Text.Remove(0, "/enable".Length));
 
-        var poll = await scheduledPollRepository.ReadAsync(chatId);
+        var poll = await scheduledPollRepository.ReadAsync(pollId);
 
         poll.IsDisabled = false;
         await scheduledPollRepository.SaveAsync(poll);
 
         await telegramBotClient.SendTextMessageAsync(update.Message.Chat.Id,
-                                                     $"Опрос {poll.Name} в чате {chatId} включен");
+                                                     $"Опрос {poll.Name} включен");
     }
 
     public bool CanHandle(Update update) =>

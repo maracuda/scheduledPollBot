@@ -51,7 +51,10 @@ namespace TelegramInteraction.Chat
         {
             log.Error(exception);
 
-            if(exception is not ApiRequestException && exception is not SocketException)
+            if(exception is not ApiRequestException
+               && exception is not SocketException
+               && exception is not RequestException
+               )
             {
                 telegramLogger.Log(exception);
             }

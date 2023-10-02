@@ -69,6 +69,7 @@ public class FindUnpaidChatsCommand : IChatCommand
                                                   + $"\t/disable{-requestToChat[r.Id]}"
                                                   + $"\t/payforever{-requestToChat[r.Id]}"
                                                   + $"\t/payforMonth{-requestToChat[r.Id]}"
+                                                  + $"\t/sendLetter{-requestToChat[r.Id]}"
                                           )
         );
 

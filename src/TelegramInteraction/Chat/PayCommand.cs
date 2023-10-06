@@ -27,7 +27,7 @@ public class PayCommand : IChatCommand
         );
     }
 
-    public bool CanHandle(Update update) => update?.Message?.Text != null && update.Message.Text.StartsWith("/pay");
+    public bool CanHandle(Update update) => update?.Message?.Text != null && update.Message.Text.StartsWith("/payInfo");
 
     private readonly ITelegramBotClient telegramBotClient;
 }

@@ -1,17 +1,12 @@
-﻿using System.Threading.Tasks;
+﻿using System.IO;
+using System.Threading.Tasks;
 
 using BusinessLogic;
-
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 
 using SimpleInjector;
 
 using TelegramInteraction.Chat;
 
-using Vostok.Applications.AspNetCore;
-using Vostok.Applications.AspNetCore.Builders;
 using Vostok.Hosting.Abstractions;
 using Vostok.Hosting.Abstractions.Composite;
 using Vostok.Hosting.Abstractions.Requirements;
@@ -19,14 +14,13 @@ using Vostok.Hosting.Abstractions.Requirements;
 namespace TelegramInteraction
 {
     [RequiresPort]
+    [RequiresConfiguration(typeof(MySettings))]
     public class MultiApplication : CompositeApplication
     {
         public MultiApplication()
             : base(builder => builder
-                              .AddAspNetCore(SetupAspNetCore)
                               .AddApplication(new ScheduledApplication())
                               .AddApplication(new ChatApplication())
-                              .UseParallelInitialization()
             )
         {
         }
@@ -35,7 +29,7 @@ namespace TelegramInteraction
         {
             var container = new Container();
 
-            var applicationSettings = ApplicationSettingsProvider.Get(environment.ApplicationIdentity.Environment);
+            var applicationSettings = GetSettings(environment);
             container.RegisterInstance(applicationSettings);
             container.ConfigureTelegramClient(applicationSettings);
 
@@ -57,20 +51,17 @@ namespace TelegramInteraction
             return Task.CompletedTask;
         }
 
-        private static void SetupAspNetCore(IVostokAspNetCoreApplicationBuilder builder,
-                                            IVostokHostingEnvironment environment
-        )
+        private IApplicationSettings GetSettings(IVostokHostingEnvironment vostokHostingEnvironment)
         {
-            builder.SetupWebHost(b =>
-                    {
-                        b.Configure(app =>
-                                {
-                                    app.UseRouting();
-                                    app.Run(async context => { await context.Response.WriteAsync("I'm alive!"); });
-                                }
-                        );
-                    }
-            );
+            {
+                if(File.Exists("Settings/settings.txt"))
+                {
+                    return new LocalApplicationSettings();
+                }
+
+                var mySettings = vostokHostingEnvironment.ConfigurationProvider.Get<MySettings>();
+                return new HoustonApplicationSettings(mySettings);
+            }
         }
     }
 }

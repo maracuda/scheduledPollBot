@@ -22,7 +22,7 @@ namespace TelegramInteraction
 {
     public class ScheduledApplication : VostokScheduledAsyncApplication
     {
-        protected override async Task SetupAsync(IScheduledActionsBuilder builder, IVostokHostingEnvironment environment
+        protected override Task SetupAsync(IScheduledActionsBuilder builder, IVostokHostingEnvironment environment
         )
         {
             sendPollTasks = new ConcurrentDictionary<Guid, Task>();
@@ -41,6 +41,7 @@ namespace TelegramInteraction
                                                       telegramLogger
                              )
             );
+            return Task.CompletedTask;
         }
 
         private async Task ScheduleTasks(ITelegramBotClient telegramBotClient,

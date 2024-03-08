@@ -1,4 +1,3 @@
-using System;
 using System.Threading.Tasks;
 
 using AutoMapper;
@@ -24,32 +23,10 @@ namespace TelegramInteraction.Chat
             );
         }
 
-        public async Task CreateAsync(ScheduledPoll scheduledPoll)
-        {
-            await scheduledPollRepository.CreateAsync(mapper.Map<ScheduledPollDbo>(scheduledPoll));
-        }
-
         public async Task<ScheduledPoll[]> FindNotDisabledAsync()
         {
             var dbos = await scheduledPollRepository.FindNotDisabledAsync();
             return mapper.Map<ScheduledPoll[]>(dbos);
-        }
-
-        public async Task<ScheduledPoll[]> GetAll(long chatId)
-        {
-            var dbos = await scheduledPollRepository.FindAsync(chatId);
-            return mapper.Map<ScheduledPoll[]>(dbos);
-        }
-
-        public async Task SaveAsync(ScheduledPoll poll)
-        {
-            await scheduledPollRepository.SaveAsync(mapper.Map<ScheduledPollDbo>(poll));
-        }
-
-        public async Task<ScheduledPoll> ReadAsync(Guid pollId)
-        {
-            var dbo = await scheduledPollRepository.ReadAsync(pollId);
-            return mapper.Map<ScheduledPoll>(dbo);
         }
     }
 }

@@ -7,21 +7,6 @@ namespace TelegramInteraction.Chat;
 
 public class HardCodedPollRepository : IScheduledPollRepository
 {
-    public Task CreateAsync(ScheduledPollDbo poll)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task<ScheduledPollDbo[]> FindAsync(long chatId)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task SaveAsync(ScheduledPollDbo poll)
-    {
-        throw new NotImplementedException();
-    }
-
     public Task<ScheduledPollDbo[]> FindNotDisabledAsync()
     {
         return Task.FromResult(new ScheduledPollDbo[]
@@ -185,15 +170,5 @@ public class HardCodedPollRepository : IScheduledPollRepository
                         },
                 }
         );
-    }
-
-    public Task<ScheduledPollDbo> ReadAsync(Guid pollId)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task SaveAsync(ScheduledPollDbo[] polls)
-    {
-        throw new NotImplementedException();
     }
 }

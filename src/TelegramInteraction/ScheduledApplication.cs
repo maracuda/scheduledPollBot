@@ -11,7 +11,6 @@ using NCrontab;
 using SimpleInjector;
 
 using Telegram.Bot;
-using Telegram.Bot.Exceptions;
 
 using TelegramInteraction.Chat;
 
@@ -123,19 +122,6 @@ namespace TelegramInteraction
                 else
                 {
                     contextLog.Warn("***Sending was cancelled");
-                }
-            }
-            catch(ApiRequestException apiRequestException)
-            {
-                if(apiRequestException.Message.Contains("Forbidden: bot was kicked from the group chat"))
-                {
-                    var poll = await scheduledPollService.ReadAsync(scheduledPoll.Id);
-                    poll.IsDisabled = true;
-                    await scheduledPollService.SaveAsync(poll);
-                }
-                else
-                {
-                    throw;
                 }
             }
             catch(Exception ex)

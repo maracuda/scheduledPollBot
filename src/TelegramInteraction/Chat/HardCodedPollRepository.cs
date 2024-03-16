@@ -37,46 +37,6 @@ public class HardCodedPollRepository : IScheduledPollRepository
                         },
                     new()
                         {
-                            Id = Guid.Parse("77e45fab-9caf-4ed4-8ac3-3f2c37fee2f0"),
-                            ChatId = -1001675590697,
-                            Schedule = "0 4 * * *",
-                            Name = "I'm OK",
-                            Options = new[] { "I'm OK", "?" },
-                        },
-                    new()
-                        {
-                            Id = Guid.Parse("9253102e-15f0-4717-99f8-beb86720a7ca"),
-                            ChatId = -769594935,
-                            Schedule = "0 4 * * *",
-                            Name = "I'm OK East",
-                            Options = new[] { "I'm OK", "?" },
-                        },
-                    new()
-                        {
-                            Id = Guid.Parse("3d5e4234-e26d-4607-b856-d64e0646915d"),
-                            ChatId = -777241687,
-                            Schedule = "0 4 * * *",
-                            Name = "I'm OK South",
-                            Options = new[] { "I'm OK", "?" },
-                        },
-                    new()
-                        {
-                            Id = Guid.Parse("00cafd8d-fdb6-439c-ac1f-2bb1db13a554"),
-                            ChatId = -627806213,
-                            Schedule = "0 4 * * *",
-                            Name = "I'm OK West",
-                            Options = new[] { "I'm OK", "?" },
-                        },
-                    new()
-                        {
-                            Id = Guid.Parse("85d8c967-42ec-4a46-9f72-85e3a99328cc"),
-                            ChatId = -723919944,
-                            Schedule = "0 4 * * *",
-                            Name = "I'm OK",
-                            Options = new[] { "I'm OK", "?" },
-                        },
-                    new()
-                        {
                             Id = Guid.Parse("9f327ea5-46b0-4cfd-9a1a-444ee44026b0"),
                             ChatId = -1001367822922,
                             Schedule = "0 3 * * 1-5",
@@ -167,6 +127,14 @@ public class HardCodedPollRepository : IScheduledPollRepository
                             Schedule = "0 11 * * 1-5",
                             Name = "Кушац!",
                             Options = new[] { "13:00", "13:30", "14:00", "14:30", "15:00", "15:30", "16:00", "Позже" },
+                        },
+                    new()
+                        {
+                            Id = Guid.Parse("30A1A427-40EE-4D18-98CD-0EC8766AAE3E"),
+                            ChatId = -1001450404373,
+                            Schedule = "0 14 * * 0",
+                            Name = "Волейбол Вт 19.00-20.30",
+                            Options = new[] { "+", "-" },
                         },
                 }
         );

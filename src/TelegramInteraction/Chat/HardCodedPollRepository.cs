@@ -51,6 +51,23 @@ public class HardCodedPollRepository : IScheduledPollRepository
                         },
                     new()
                         {
+                            Id = Guid.Parse("7C56D955-3D2E-4181-BE8C-7CD3342C2651"),
+                            ChatId = -855034942,
+                            Schedule = "30 19 * * 0-4",
+                            Name = "Где ты завтра?",
+                            Options = new[]
+                                {
+                                    "Офис на \"Народной воли\"",
+                                    "Офис на \"Широкой речке\"",
+                                    "Другой офис",
+                                    "Дома",
+                                    "я в командировке",
+                                    "у меня отпуск",
+                                    "Болею :(",
+                                },
+                        },
+                    new()
+                        {
                             Id = Guid.Parse("abf38610-4d34-4dc9-8387-20913fdc58b7"),
                             ChatId = -1001860361407,
                             Schedule = "0 14 * * 1-5",

@@ -3,7 +3,7 @@
     <PropertyGroup>
         <OutputType>Exe</OutputType>
         <TargetFramework>net6.0</TargetFramework>
-        <PackageVersion>1.0.18</PackageVersion>
+        <PackageVersion>1.0.19</PackageVersion>
     </PropertyGroup>
 
     <ItemGroup>
@@ -20,5 +20,6 @@
         <None Update="Settings\settings.txt">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
+        <None Remove="TelegramInteraction.1.0.18.nupkg" />
     </ItemGroup>
 </Project>

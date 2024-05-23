@@ -109,7 +109,7 @@ public class HardCodedPollRepository : IScheduledPollRepository
                         {
                             Id = Guid.Parse("82272953-138a-402c-9e1a-652bd1f13cb2"),
                             ChatId = -1001740754628,
-                            Schedule = "0 2 * * 1",
+                            Schedule = "0 5 * * 1",
                             Name = "Сегодня тренируешься?",
                             Options = new[] { "Да", "Нет", "Ответы" },
                         },

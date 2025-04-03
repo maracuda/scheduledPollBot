@@ -111,7 +111,7 @@ public class HardCodedPollRepository : IScheduledPollRepository
                             ChatId = -1001740754628,
                             Schedule = "0 5 * * 1",
                             Name = "Сегодня тренируешься?",
-                            Options = new[] { "Да", "Нет", "Ответы" },
+                            Options = new[] { "Да (сотрудник Контура)", "Да (гость)", "Нет", "Ответы" },
                         },
                     new()
                         {

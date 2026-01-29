@@ -10,5 +10,6 @@ namespace TelegramInteraction.Chat
         Task<ScheduledPoll[]> GetAll(long chatId);
         Task SaveAsync(ScheduledPoll poll);
         Task<ScheduledPoll> ReadAsync(Guid pollId);
+        Task<ScheduledPoll[]> ReadAllAsync();
     }
 }

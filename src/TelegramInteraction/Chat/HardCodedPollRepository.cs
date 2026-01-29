@@ -132,4 +132,9 @@ public class HardCodedPollRepository : IScheduledPollRepository
     {
         throw new NotImplementedException();
     }
+
+    public Task<ScheduledPollDbo[]> ReadAllAsync()
+    {
+        throw new NotImplementedException();
+    }
 }

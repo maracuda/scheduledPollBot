@@ -13,5 +13,6 @@ namespace TelegramInteraction.Chat
         Task<ScheduledPollDbo[]> FindNotDisabledAsync();
         Task<ScheduledPollDbo> ReadAsync(Guid pollId);
         Task SaveAsync(ScheduledPollDbo[] polls);
+        Task<ScheduledPollDbo[]> ReadAllAsync();
     }
 }

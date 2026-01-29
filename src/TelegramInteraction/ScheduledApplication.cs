@@ -48,7 +48,8 @@ namespace TelegramInteraction
                                          IScheduledActionContext context, ILog log, ITelegramLogger telegramLogger
         )
         {
-            var enabledPolls = (await scheduledPollService.FindNotDisabledAsync()).ToArray();
+            // var enabledPolls = (await scheduledPollService.FindNotDisabledAsync()).ToArray();
+            var enabledPolls = (await scheduledPollService.ReadAllAsync()).ToArray();
 
             foreach(var scheduledPoll in enabledPolls)
             {

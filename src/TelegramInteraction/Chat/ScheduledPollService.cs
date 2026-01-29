@@ -35,6 +35,12 @@ namespace TelegramInteraction.Chat
             return mapper.Map<ScheduledPoll[]>(dbos);
         }
 
+        public async Task<ScheduledPoll[]> ReadAllAsync()
+        {
+            var dbos = await scheduledPollRepository.ReadAllAsync();
+            return mapper.Map<ScheduledPoll[]>(dbos);
+        }
+
         public async Task<ScheduledPoll[]> GetAll(long chatId)
         {
             var dbos = await scheduledPollRepository.FindAsync(chatId);

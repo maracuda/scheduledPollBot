@@ -50,7 +50,7 @@ namespace TelegramInteraction
         )
         {
             // var enabledPolls = (await scheduledPollService.FindNotDisabledAsync()).ToArray();
-            var enabledPolls = (await scheduledPollService.ReadAllAsync()).ToArray();
+            var enabledPolls = (await scheduledPollService.FindNotDisabledAsync()).ToArray();
 
             foreach(var scheduledPoll in enabledPolls)
             {

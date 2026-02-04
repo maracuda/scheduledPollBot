@@ -44,8 +44,8 @@ namespace TelegramInteraction
             container.Register<ChooseOptionsValidator>(Lifestyle.Singleton);
             container.Register<ChooseNameValidator>(Lifestyle.Singleton);
             
-            container.Register<ICreatePollRepository, CreatePollRepository>(Lifestyle.Singleton);
             container.Register<IPollContextFactory, PollContextFactory>(Lifestyle.Singleton);
+            container.Register<ICreatePollRepository, CreatePollRepository>(Lifestyle.Singleton);
             
             container.Register<IScheduledPollService, ScheduledPollService>(Lifestyle.Singleton);
             container.Register<IScheduledPollRepository, ScheduledPollRepository>(Lifestyle.Singleton);

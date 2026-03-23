@@ -3,7 +3,8 @@
     <PropertyGroup>
         <OutputType>Exe</OutputType>
         <TargetFramework>net6.0</TargetFramework>
-        <PackageVersion>1.0.15</PackageVersion>
+        <PackageVersion>1.1.19</PackageVersion>
+        <PackageReleaseNotes>Перевел на прокси, потому что ТГ блочат</PackageReleaseNotes>
     </PropertyGroup>
 
     <ItemGroup>
